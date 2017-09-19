@@ -1,0 +1,4 @@
+*.pickle
+build/
+build_tmp/
+.idea/

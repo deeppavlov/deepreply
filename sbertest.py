@@ -124,6 +124,7 @@ def main():
     update_model_param_dict['repo_url'] = config.MODELS_DIR
     update_model_param_dict['repo_model_url'] = config.REPO_MODEL_URL
 
+
     # Execute test
     run_test('http://api.aibotbench.com/kpi2/qas', 5)
 
