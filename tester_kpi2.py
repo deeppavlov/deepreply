@@ -79,42 +79,24 @@ class tester():
 
     # Run full cycle of testing session and store data for each step
     def run_test(self):
-        print('Getting tasks...')
         tasks = self.get_tasks()
         session_id = tasks['id']
         numtasks = tasks['total']
         self.tasks = tasks
         self.session_id = session_id
         self.numtasks = numtasks
-        print('Session ID: %s' % (session_id))
-        print('Tasks (total: %s):' % str(numtasks))
-        print('    %s' % str(tasks))
 
-        print('Making observations...')
         observations = self.make_observations(tasks)
         self.observations = observations
-        print('Done:')
-        print('    %s' % str(observations))
 
-        print('Making agent params...')
         agent_params = self.make_agent_params()
         self.agent_params = agent_params
-        print('Done:')
-        print('    %s' % str(agent_params))
 
-        print('Runing agent and getting predictions...')
         predictions = self.get_predictions(agent_params, observations)
         self.predictions = predictions
-        print('Done:')
-        print('    %s' % str(predictions))
 
-        print('Making answers...')
         answers = self.make_answers(session_id, observations, predictions)
         self.answers = answers
-        print('Done:')
-        print('    %s' % str(answers))
 
-        print('Posting answers and getting score...')
         score = self.get_score(answers)
         self.score = score
-        print('    Done, score = %s' % str(score))

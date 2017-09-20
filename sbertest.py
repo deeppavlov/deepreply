@@ -1,8 +1,10 @@
 import os
 import shutil
 import json
+import urllib.parse
 import urllib.request
 import tarfile
+
 
 
 def get_models_files(config, models_repo_url):
@@ -13,9 +15,9 @@ def get_models_files(config, models_repo_url):
     models_files = []
     for model in models:
         # Prepare paths for model downloading and storing
-        model_url = urljoin(models_repo_url, model['repo_url'])
-        store_path = urljoin(models_dir, model['repo_url'])
-        model_dir = urljoin(os.path.dirname(store_path), \
+        model_url = urllib.parse.urljoin(models_repo_url, model['repo_url'])
+        store_path = os.path.join(models_dir, model['repo_url'])
+        model_dir = os.path.join(os.path.dirname(store_path), \
                             os.path.basename(store_path).split('.', maxsplit=-1)[0]) + '/'
 
         # Prepare models files list
@@ -44,11 +46,6 @@ def get_models_files(config, models_repo_url):
             print('Extracting model finished')
 
     return models_files
-
-
-def urljoin(*args):
-    url = '/'.join(map(lambda x: str(x).rstrip('/').lstrip('/'), args))
-    return '/' + url if args[0][0] == '/' else url
 
 
 def main():
