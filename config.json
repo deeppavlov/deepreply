@@ -1,0 +1,34 @@
+{
+	"data_dir":"./build/",
+	"models_dir":"./build/models/",
+	"models_repo_url":"!!!DUMMY",
+	"embeddings_dir":"./build/",
+	"embeddings_repo_url":"!!!DUMMY",
+	"kpi_name":"kpi2",
+	"update_models":0,
+	"kpis":
+	{
+		"kpi2":
+		{
+			"rest_url":"http://api.aibotbench.com/kpi2/qas",
+			"test_tasks_number":100,
+			"use_models":["maxpool_match"],
+			"use_embedding":"fasttext"
+		}
+	},
+	"models":
+	{
+		"maxpool_match":
+		{
+			"repo_url":"paraphraser/paraphraser_models_final.tar.gz",
+			"files":["maxpool_match_0", "maxpool_match_1", "maxpool_match_2", "maxpool_match_3", "maxpool_match_4"]
+		}
+	},
+	"embeddings":
+	{
+		"fasttext":
+		{
+			"files":"ft_0.8.3_nltk_yalen_sg_300.bin"
+		}
+	}
+}
