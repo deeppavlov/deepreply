@@ -4,31 +4,41 @@
 	"models_repo_url":"!!!DUMMY",
 	"embeddings_dir":"./build/",
 	"embeddings_repo_url":"!!!DUMMY",
-	"kpi_name":"kpi2",
-	"update_models":0,
+	"kpi_name":"kpi1",
+	"update_models":1,
 	"kpis":
 	{
+		"kpi1":
+		{
+			"settings_kpi":
+				{
+					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/insults/insults_models_final.tar.gz",
+					"rest_url":"http://api.aibotbench.com/kpi1/qas",
+					"test_tasks_number":10
+				},
+			"settings_agent":
+				{
+					"model_files_names":["cnn_word_0", "cnn_word_1", "cnn_word_2", "log_reg", "svc"],
+					"model_names":["cnn_word", "cnn_word", "cnn_word", "log_reg", "svc"],
+					"model_coefs": [0.10, 0.10, 0.10, 0.2, 0.5],
+					"kernel_sizes_cnn": "1 2 3 2 1",
+					"pool_sizes_cnn": "2 2 2 2 2",
+					"fasttext_model":"reddit_fasttext_model.bin"
+				}
+		},
 		"kpi2":
 		{
-			"rest_url":"http://api.aibotbench.com/kpi2/qas",
-			"test_tasks_number":100,
-			"use_models":["maxpool_match"],
-			"use_embedding":"fasttext"
-		}
-	},
-	"models":
-	{
-		"maxpool_match":
-		{
-			"repo_url":"paraphraser/paraphraser_models_final.tar.gz",
-			"files":["maxpool_match_0", "maxpool_match_1", "maxpool_match_2", "maxpool_match_3", "maxpool_match_4"]
-		}
-	},
-	"embeddings":
-	{
-		"fasttext":
-		{
-			"files":"ft_0.8.3_nltk_yalen_sg_300.bin"
+			"settings_kpi":
+				{
+					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/paraphraser/paraphraser_models_final.tar.gz",
+					"rest_url":"http://api.aibotbench.com/kpi2/qas",
+					"test_tasks_number":10
+				},
+			"settings_agent":
+				{
+					"model_files_names":["maxpool_match_0", "maxpool_match_1", "maxpool_match_2", "maxpool_match_3", "maxpool_match_4"],
+					"fasttext_model":"ft_0.8.3_nltk_yalen_sg_300.bin"
+				}
 		}
 	}
 }

@@ -1,9 +1,8 @@
 import os
 import json
 import requests
-import numpy as np
 
-from deeppavlov.agents.paraphraser.paraphraser import EnsembleParaphraserAgent
+from deeppavlov.agents.insults.insults_agents import EnsembleInsultsAgent
 
 
 class tester():
@@ -21,7 +20,7 @@ class tester():
         self.answers = None
         self.score = None
 
-    # Get kpi2 tasks via REST
+    # Get kpi1 tasks via REST
     def get_tasks(self):
         get_url = self.config['kpis'][self.kpi_name]['settings_kpi']['rest_url']
         test_tasks_number = self.config['kpis'][self.kpi_name]['settings_kpi']['test_tasks_number']
@@ -36,7 +35,7 @@ class tester():
         for task in tasks['qas']:
             observations.append({
                 'id': task['id'],
-                'text': 'Dummy title\n%s\n%s' % (task['phrase1'], task['phrase2']),
+                'text': task['question'],
             })
         return observations
 
@@ -46,15 +45,19 @@ class tester():
         embedding_file = self.config['kpis'][self.kpi_name]['settings_agent']['fasttext_model']
         model_files = self.opt['model_files']
         agent_params = {
-            'fasttext_model': os.path.join(embeddings_dir, embedding_file),
             'model_files': model_files,
-            'datatype': 'test'
+            'model_names': self.config['kpis'][self.kpi_name]['settings_agent']['model_names'],
+            'model_coefs': self.config['kpis'][self.kpi_name]['settings_agent']['model_coefs'],
+            'datatype': 'test',
+            'kernel_sizes_cnn': self.config['kpis'][self.kpi_name]['settings_agent']['kernel_sizes_cnn'],
+            'pool_sizes_cnn': self.config['kpis'][self.kpi_name]['settings_agent']['pool_sizes_cnn'],
+            'fasttext_model': os.path.join(embeddings_dir, embedding_file)
         }
         return agent_params
 
     # Process observations via algorithm
     def get_predictions(self, opt, observations):
-        agent = EnsembleParaphraserAgent(opt)
+        agent = EnsembleInsultsAgent(opt)
         predictions = agent.batch_act(observations)
         return predictions
 
@@ -65,7 +68,7 @@ class tester():
         answers['answers'] = {}
         observ_predict = list(zip(observations, predictions))
         for obs, pred in observ_predict:
-            answers['answers'][obs['id']] = (lambda s: np.float64((1 if s == 0.5 else round(s))))(pred['score'][0])
+            answers['answers'][obs['id']] = pred['score']
         return answers
 
     # Post answers data and get score

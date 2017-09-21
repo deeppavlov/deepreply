@@ -4,48 +4,56 @@ import json
 import urllib.parse
 import urllib.request
 import tarfile
+import glob
 
 
-
-def get_models_files(config, models_repo_url):
+def get_model_files(config):
     kpi_name = config['kpi_name']
-    models = [config['models'][model] for model in config['kpis'][kpi_name]['use_models']]
-    models_dir = config['models_dir']
     update_models = config['update_models']
-    models_files = []
-    for model in models:
-        # Prepare paths for model downloading and storing
-        model_url = urllib.parse.urljoin(models_repo_url, model['repo_url'])
-        store_path = os.path.join(models_dir, model['repo_url'])
-        model_dir = os.path.join(os.path.dirname(store_path), \
-                            os.path.basename(store_path).split('.', maxsplit=-1)[0]) + '/'
+    kpi_models_dir = os.path.join(config['models_dir'], kpi_name)
+    model_repo_url = config['kpis'][kpi_name]['settings_kpi']['model_repo_url']
+    model_filename = os.path.basename(urllib.parse.urlsplit(model_repo_url).path)
+    model_download_path = os.path.join(kpi_models_dir, model_filename)
+    model_extract_dir = os.path.join(os.path.dirname(model_download_path), \
+                             os.path.basename(model_download_path).split('.', maxsplit=-1)[0]) + '/'
 
-        # Prepare models files list
-        for model_file in model['files']:
-            models_files.append(model_dir + model_file)
-        print('Models files list:')
-        print('    %s' % (str(models_files)))
+    if update_models:
+        # Delete existing extracted model files
+        if os.path.isdir(model_extract_dir) and model_extract_dir != '/':
+            print('Deliting existing extracted model files...')
+            shutil.rmtree(model_extract_dir, ignore_errors=True)
+            print('Done')
 
-        if update_models:
-            # Download model
-            print('Downloading model to ' + store_path + ' ...')
-            os.makedirs(os.path.dirname(store_path), exist_ok=True)
-            if os.path.isdir(model_dir) and model_dir != '/':
-                shutil.rmtree(model_dir, ignore_errors=True)
-            req = urllib.request.urlopen(model_url)
-            with open(store_path, 'w+b') as f:
-                f.write(req.read())
-                f.close()
-            print('Downloading model finished')
+        # Download model files
+        print('Downloading model to ' + model_download_path + ' ...')
+        os.makedirs(os.path.dirname(model_extract_dir), exist_ok=True)
+        req = urllib.request.urlopen(model_repo_url)
+        with open(model_download_path, 'w+b') as f:
+            f.write(req.read())
+            f.close()
+        print('Done')
 
-            # Extract model
-            print('Extracting model to ' + model_dir + ' ...')
-            tar = tarfile.open(store_path, 'r:gz')
-            tar.extractall(path=os.path.dirname(store_path))
-            tar.close()
-            print('Extracting model finished')
+        # Extract model files
+        print('Extracting model to ' + model_extract_dir + ' ...')
+        tar = tarfile.open(model_download_path, 'r:gz')
+        tar.extractall(path=model_extract_dir)
+        tar.close()
+        print('Done')
 
-    return models_files
+    return model_extract_dir
+
+
+def get_modelfiles_paths(model_dir, model_files):
+    modelfiles_paths = []
+    # Constructing full path to each model
+    for file in model_files:
+        search_tempalte = os.path.join(model_dir, '**/' + file + '.*')
+        results = glob.glob(search_tempalte, recursive=True)
+        if len(results) > 0:
+            result = results[0]
+            modelfiles_paths.append(os.path.join(os.path.dirname(result), \
+                                                 os.path.basename(result).split('.', maxsplit=-1)[0]))
+    return modelfiles_paths
 
 
 def main():
@@ -67,9 +75,13 @@ def main():
     data_dir = config['data_dir']
     os.makedirs(os.path.dirname(data_dir), exist_ok=True)
 
-    # Get models files list [and update models files]
-    print('Getting models files...')
-    opt['models_files'] = get_models_files(config, opt['models_repo_url'])
+    # Get model files dir [and update models files]
+    model_files_dir = get_model_files(config)
+
+    # Get model files list
+    kpi_name = config['kpi_name']
+    opt['model_files'] = \
+        get_modelfiles_paths(model_files_dir, config['kpis'][kpi_name]['settings_agent']['model_files_names'])
 
     # Execute test
     print('Executing %s test...' % config['kpi_name'])
@@ -79,7 +91,6 @@ def main():
     tester.run_test()
     print('%s test finished, tasks number: %s, SCORE: %s' % (config['kpi_name'], str(tester.numtasks), str(tester.score)))
 
+
 if __name__ == '__main__':
     main()
-
-
