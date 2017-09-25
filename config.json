@@ -4,7 +4,7 @@
 	"models_repo_url":"!!!DUMMY",
 	"embeddings_dir":"./build/",
 	"embeddings_repo_url":"!!!DUMMY",
-	"kpi_name":"kpi1",
+	"kpi_name":"kpi4",
 	"update_models":1,
 	"kpis":
 	{
@@ -14,15 +14,15 @@
 				{
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/insults/insults_models_final.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi1/qas",
-					"test_tasks_number":10
+					"test_tasks_number":100
 				},
 			"settings_agent":
 				{
 					"model_files_names":["cnn_word_0", "cnn_word_1", "cnn_word_2", "log_reg", "svc"],
 					"model_names":["cnn_word", "cnn_word", "cnn_word", "log_reg", "svc"],
-					"model_coefs": [0.10, 0.10, 0.10, 0.2, 0.5],
-					"kernel_sizes_cnn": "1 2 3 2 1",
-					"pool_sizes_cnn": "2 2 2 2 2",
+					"model_coefs":[0.10, 0.10, 0.10, 0.2, 0.5],
+					"kernel_sizes_cnn":"1 2 3 2 1",
+					"pool_sizes_cnn":"2 2 2 2 2",
 					"fasttext_model":"reddit_fasttext_model.bin"
 				}
 		},
@@ -32,12 +32,52 @@
 				{
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/paraphraser/paraphraser_models_final.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi2/qas",
-					"test_tasks_number":10
+					"test_tasks_number":100
 				},
 			"settings_agent":
 				{
 					"model_files_names":["maxpool_match_0", "maxpool_match_1", "maxpool_match_2", "maxpool_match_3", "maxpool_match_4"],
 					"fasttext_model":"ft_0.8.3_nltk_yalen_sg_300.bin"
+				}
+		},
+		"kpi4":
+		{
+			"settings_kpi":
+				{
+					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/squad/squad_final.tar.gz",
+					"rest_url":"http://api.aibotbench.com/kpi4/qas",
+					"test_tasks_number":10
+				},
+			"settings_agent":
+				{
+					"model_files_names":["squad1"],
+					"embedding_file":"glove.840B.300d.txt",
+					"datatype":"test",
+					"batchsize":64,
+					"display_examples":0,
+					"max_train_time":-1,
+					"num_epochs":-1,
+					"log_every_n_secs":60,
+					"log_every_n_epochs":-1,
+					"validation_every_n_secs":1800,
+					"validation_every_n_epochs":-1,
+					"chosen_metric":"f1",
+					"validation_patience":5,
+					"lr_drop_patience":1,
+					"type":"fastqa_default",
+					"lr":0.0001,
+					"lr_drop":0.3,
+					"linear_dropout":0.0,
+					"embedding_dropout":0.5,
+					"rnn_dropout":0.0,
+					"recurrent_dropout":0.0,
+					"input_dropout":0.0,
+					"output_dropout":0.0,
+					"context_enc_layers":1,
+					"question_enc_layers":1,
+					"encoder_hidden_dim":300,
+					"projection_dim":300,
+					"pointer_dim":300
 				}
 		}
 	}
