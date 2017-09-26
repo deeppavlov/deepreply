@@ -4,14 +4,15 @@
 	"models_repo_url":"!!!DUMMY",
 	"embeddings_dir":"./build/",
 	"embeddings_repo_url":"!!!DUMMY",
-	"kpi_name":"kpi4",
-	"update_models":1,
+	"kpi_name":"kpi3",
+	"update_models":0,
 	"kpis":
 	{
 		"kpi1":
 		{
 			"settings_kpi":
 				{
+					"tester_file":"tester_kpi1",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/insults/insults_models_final.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi1/qas",
 					"test_tasks_number":100
@@ -30,6 +31,7 @@
 		{
 			"settings_kpi":
 				{
+					"tester_file":"tester_kpi2",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/paraphraser/paraphraser_models_final.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi2/qas",
 					"test_tasks_number":100
@@ -40,10 +42,35 @@
 					"fasttext_model":"ft_0.8.3_nltk_yalen_sg_300.bin"
 				}
 		},
+		"kpi3":
+		{
+			"settings_kpi":
+				{
+					"tester_file":"tester_kpi3",
+					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/ner/ner_final.tar.gz",
+					"rest_url":"http://api.aibotbench.com/kpi3/qas",
+					"test_tasks_number":1
+				},
+			"settings_agent":
+				{
+					"model_files_names":["model.ckpt"],
+					"dict_files_names":"ner",
+					"datatype":"test",
+					"learning_rate":0.01,
+					"batchsize":2,
+					"display_examples":0,
+					"max_train_time":-1,
+					"validation_every_n_epochs":5,
+					"log_every_n_epochs":1,
+					"log_every_n_secs":-1,
+					"chosen_metric":"f1"
+				}
+		},
 		"kpi4":
 		{
 			"settings_kpi":
 				{
+					"tester_file":"tester_kpi4",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/squad/squad_final.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi4/qas",
 					"test_tasks_number":10

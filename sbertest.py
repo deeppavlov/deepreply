@@ -47,12 +47,11 @@ def get_modelfiles_paths(model_dir, model_files):
     modelfiles_paths = []
     # Constructing full path to each model
     for file in model_files:
-        search_tempalte = os.path.join(model_dir, '**/' + file + '.*')
+        search_tempalte = os.path.join(model_dir, '**/' + file + '*')
         results = glob.glob(search_tempalte, recursive=True)
         if len(results) > 0:
             result = results[0]
-            modelfiles_paths.append(os.path.join(os.path.dirname(result), \
-                                                 os.path.basename(result).split('.', maxsplit=-1)[0]))
+            modelfiles_paths.append(os.path.join(os.path.dirname(result), file))
     return modelfiles_paths
 
 
@@ -85,7 +84,7 @@ def main():
 
     # Execute test
     print('Executing %s test...' % config['kpi_name'])
-    tester_module = __import__('tester_' + config['kpi_name'])
+    tester_module = __import__(config['kpis'][kpi_name]['settings_kpi']['tester_file'])
     tester_class = getattr(tester_module, 'tester')
     tester = tester_class(config, opt)
     tester.run_test()
