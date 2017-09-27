@@ -33,7 +33,9 @@ class tester():
     # Prepare observations set
     def make_observations(self, tasks):
         observations = []
+        print('Here are the tasks:')
         for task in tasks['qas']:
+            print(task)
             observations.append({
                 'id': task['id'],
                 'text': task['question']
@@ -52,7 +54,9 @@ class tester():
             if key not in ['model_files_names', 'dict_files_names', 'display_examples']:
                 agent_params[key] = value
         model_files = self.opt['model_files']
+        # model_file and pretrained_model params should always point to the same dir with pretrained model
         agent_params['model_file'] = os.path.dirname(model_files[0])
+        agent_params['pretrained_model'] = os.path.dirname(model_files[0])
         agent_params['dict_file'] = os.path.join(os.path.dirname(model_files[0]), agent_settings['dict_files_names'])
         agent_params['display_examples'] = bool(agent_settings['display_examples'])
         return agent_params
@@ -60,7 +64,8 @@ class tester():
     # Process observations via algorithm
     def get_predictions(self, opt, observations):
         agent = NERAgent(opt)
-        predictions = agent.batch_act(observations)
+        raw_predicts = agent.batch_act(observations)
+        predictions = [{'id':pred['id'], 'text':pred['text'].replace('__NULL__', '').strip()} for pred in raw_predicts]
         return predictions
 
     # Generate answers data
@@ -69,14 +74,12 @@ class tester():
         observ_predict = list(zip(observations, predictions))
         for obs, pred in observ_predict:
             answers[obs['id']] = pred['text']
-            #import re
-            #answers[obs['id']] = re.sub('__\w+__', '0', pred['text'])
-        #tasks = self.tasks
-        #tasks['answers'] = answers
-        #return tasks
-        answ = {}
-        answ['answers'] = answers
-        return answ
+        tasks = self.tasks
+        tasks['answers'] = answers
+        return tasks
+        #answ = {}
+        #answ['answers'] = answers
+        #return answ
 
     # Post answers data and get score
     def get_score(self, answers):
@@ -94,26 +97,17 @@ class tester():
         self.tasks = tasks
         self.session_id = session_id
         self.numtasks = numtasks
-        print(tasks)
-        print(session_id)
-        print(numtasks)
 
         observations = self.make_observations(tasks)
         self.observations = observations
-        print(observations)
 
         agent_params = self.make_agent_params()
         self.agent_params = agent_params
-        print(agent_params)
-
         predictions = self.get_predictions(agent_params, observations)
         self.predictions = predictions
-        print(predictions)
 
         answers = self.make_answers(session_id, observations, predictions)
         self.answers = answers
-        print(answers)
-        print(json.dumps(answers))
 
         score = self.get_score(answers)
         self.score = score

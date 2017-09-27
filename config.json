@@ -49,12 +49,12 @@
 					"tester_file":"tester_kpi3",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/ner/ner_final.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi3/qas",
-					"test_tasks_number":1
+					"test_tasks_number":10
 				},
 			"settings_agent":
 				{
 					"model_files_names":["model.ckpt"],
-					"dict_files_names":"ner",
+					"dict_files_names":"ner.dict",
 					"datatype":"test",
 					"learning_rate":0.01,
 					"batchsize":2,
@@ -64,7 +64,8 @@
 					"log_every_n_epochs":1,
 					"log_every_n_secs":-1,
 					"chosen_metric":"f1"
-				}
+				},
+			"settings_agent_comment":"dict_files_names param should always point to .dict file"
 		},
 		"kpi4":
 		{
