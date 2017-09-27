@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import pickle
 
 from parlai.core.params import ParlaiParser
 from deeppavlov.agents.squad.squad import SquadAgent
@@ -9,6 +10,7 @@ from deeppavlov.agents.squad.squad import SquadAgent
 class tester():
 
     def __init__(self, config, opt):
+        self.agent = None
         self.config = config
         self.opt = opt
         self.kpi_name = config['kpi_name']
@@ -20,26 +22,6 @@ class tester():
         self.predictions = None
         self.answers = None
         self.score = None
-
-    # Get kpi1 tasks via REST
-    def get_tasks(self):
-        get_url = self.config['kpis'][self.kpi_name]['settings_kpi']['rest_url']
-        test_tasks_number = self.config['kpis'][self.kpi_name]['settings_kpi']['test_tasks_number']
-        get_params = {'stage': 'test', 'quantity': test_tasks_number}
-        get_response = requests.get(get_url, params=get_params)
-        tasks = json.loads(get_response.text)
-        return tasks
-
-    # Prepare observations set
-    def make_observations(self, tasks):
-        observations = []
-        for task in tasks['paragraphs']:
-            for question in task['qas']:
-                observations.append({
-                    'id': question['id'],
-                    'text': '%s\n%s' % (task['context'], question['question'])
-            })
-        return observations
 
     # Generate params for EnsembleParaphraserAgent
     def make_agent_params(self):
@@ -61,10 +43,47 @@ class tester():
         agent_params['pretrained_model'] = model_files[0]
         return agent_params
 
+    # Initiate agent
+    def init_agent(self):
+        self.agent = SquadAgent(self.make_agent_params())
+
+    # Update tester config with or without [re]initiating agent
+    def update_config(self, config, init_agent=False):
+        self.config = config
+        if init_agent:
+            opt = self.make_agent_params()
+            self.init_agent(opt)
+
+    # Update tasks number
+    def set_numtasks(self, numtasks):
+        self.numtasks = numtasks
+
+    # Get kpi1 tasks via REST
+    def get_tasks(self):
+        get_url = self.config['kpis'][self.kpi_name]['settings_kpi']['rest_url']
+        if self.numtasks in [None, 0]:
+            test_tasks_number = self.config['kpis'][self.kpi_name]['settings_kpi']['test_tasks_number']
+        else:
+            test_tasks_number = self.numtasks
+        get_params = {'stage': 'test', 'quantity': test_tasks_number}
+        get_response = requests.get(get_url, params=get_params)
+        tasks = json.loads(get_response.text)
+        return tasks
+
+    # Prepare observations set
+    def make_observations(self, tasks):
+        observations = []
+        for task in tasks['paragraphs']:
+            for question in task['qas']:
+                observations.append({
+                    'id': question['id'],
+                    'text': '%s\n%s' % (task['context'], question['question'])
+            })
+        return observations
+
     # Process observations via algorithm
-    def get_predictions(self, opt, observations):
-        agent = SquadAgent(opt)
-        predictions = agent.batch_act(observations)
+    def get_predictions(self, observations):
+        predictions = self.agent.batch_act(observations)
         return predictions
 
     # Generate answers data
@@ -84,13 +103,16 @@ class tester():
     # Post answers data and get score
     def get_score(self, answers):
         post_headers = {'Accept': '*/*'}
-        rest_response = requests.post(self.config['kpis'][self.kpi_name]['settings_kpi']['rest_url'], \
-                                      json=answers, \
+        rest_response = requests.post(self.config['kpis'][self.kpi_name]['settings_kpi']['rest_url'],
+                                      json=answers,
                                       headers=post_headers)
         return rest_response.text
 
     # Run full cycle of testing session and store data for each step
-    def run_test(self):
+    def run_test(self, init_agent=True):
+        if init_agent:
+            self.init_agent()
+
         tasks = self.get_tasks()
         session_id = tasks['id']
         numtasks = tasks['total']
@@ -104,7 +126,7 @@ class tester():
         agent_params = self.make_agent_params()
         self.agent_params = agent_params
 
-        predictions = self.get_predictions(agent_params, observations)
+        predictions = self.get_predictions(observations)
         self.predictions = predictions
 
         answers = self.make_answers(session_id, observations, predictions)

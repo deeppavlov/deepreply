@@ -4,3 +4,5 @@ build_tmp/
 .idea/
 __pycache__/
 test/
+maintenance.py
+debug/
