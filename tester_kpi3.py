@@ -9,6 +9,7 @@ from deeppavlov.agents.ner.ner import NERAgent
 class Tester:
 
     def __init__(self, config, opt):
+        self.agent = None
         self.config = config
         self.opt = opt
         self.kpi_name = config['kpi_name']
@@ -21,29 +22,8 @@ class Tester:
         self.answers = None
         self.score = None
 
-    # Get kpi1 tasks via REST
-    def get_tasks(self):
-        get_url = self.config['kpis'][self.kpi_name]['settings_kpi']['rest_url']
-        test_tasks_number = self.config['kpis'][self.kpi_name]['settings_kpi']['test_tasks_number']
-        get_params = {'stage': 'test', 'quantity': test_tasks_number}
-        get_response = requests.get(get_url, params=get_params)
-        tasks = json.loads(get_response.text)
-        return tasks
-
-    # Prepare observations set
-    def make_observations(self, tasks):
-        observations = []
-        print('Here are the tasks:')
-        for task in tasks['qas']:
-            print(task)
-            observations.append({
-                'id': task['id'],
-                'text': task['question']
-            })
-        return observations
-
-    # Generate params for EnsembleParaphraserAgent
-    def make_agent_params(self):
+    # Generate params for NERAgent
+    def _make_agent_params(self):
         parser = ParlaiParser(True, True)
         NERAgent.add_cmdline_args(parser)
         args = ['-t deeppavlov.tasks.ner.agents',
@@ -61,15 +41,53 @@ class Tester:
         agent_params['display_examples'] = bool(agent_settings['display_examples'])
         return agent_params
 
+    # Initiate agent
+    def init_agent(self):
+        self.agent = NERAgent(self._make_agent_params())
+
+    # Update Tester config with or without [re]initiating agent
+    def update_config(self, config, init_agent=False):
+        self.config = config
+        if init_agent:
+            self.init_agent()
+
+    # Update tasks number
+    def set_numtasks(self, numtasks):
+        self.numtasks = numtasks
+
+    # Get kpi3 tasks via REST
+    def _get_tasks(self):
+        get_url = self.config['kpis'][self.kpi_name]['settings_kpi']['rest_url']
+        if self.numtasks in [None, 0]:
+            test_tasks_number = self.config['kpis'][self.kpi_name]['settings_kpi']['test_tasks_number']
+        else:
+            test_tasks_number = self.numtasks
+        get_params = {'stage': 'test', 'quantity': test_tasks_number}
+        get_response = requests.get(get_url, params=get_params)
+        tasks = json.loads(get_response.text)
+        return tasks
+
+    # Prepare observations set
+    def _make_observations(self, tasks):
+        observations = []
+        print('Here are the tasks:')
+        for task in tasks['qas']:
+            print(task)
+            observations.append({
+                'id': task['id'],
+                'text': task['question']
+            })
+        return observations
+
     # Process observations via algorithm
-    def get_predictions(self, opt, observations):
-        agent = NERAgent(opt)
-        raw_predicts = agent.batch_act(observations)
-        predictions = [{'id':pred['id'], 'text':pred['text'].replace('__NULL__', '').strip()} for pred in raw_predicts]
+    def _get_predictions(self, observations):
+        raw_predicts = self.agent.batch_act(observations)
+        predictions = [{'id': pred['id'], 'text': pred['text'].replace('__NULL__', '').strip()}
+                       for pred in raw_predicts]
         return predictions
 
     # Generate answers data
-    def make_answers(self, session_id, observations, predictions):
+    def _make_answers(self, observations, predictions):
         answers = {}
         observ_predict = list(zip(observations, predictions))
         for obs, pred in observ_predict:
@@ -77,37 +95,40 @@ class Tester:
         tasks = self.tasks
         tasks['answers'] = answers
         return tasks
-        #answ = {}
-        #answ['answers'] = answers
-        #return answ
+        # answ = {}
+        # answ['answers'] = answers
+        # return answ
 
     # Post answers data and get score
-    def get_score(self, answers):
+    def _get_score(self, answers):
         post_headers = {'Accept': '*/*'}
-        rest_response = requests.post(self.config['kpis'][self.kpi_name]['settings_kpi']['rest_url'], \
-                                      json=answers, \
+        rest_response = requests.post(self.config['kpis'][self.kpi_name]['settings_kpi']['rest_url'],
+                                      json=answers,
                                       headers=post_headers)
         return rest_response.text
 
     # Run full cycle of testing session and store data for each step
-    def run_test(self):
-        tasks = self.get_tasks()
+    def run_test(self, init_agent=True):
+        if init_agent:
+            self.init_agent()
+
+        tasks = self._get_tasks()
         session_id = tasks['id']
         numtasks = tasks['total']
         self.tasks = tasks
         self.session_id = session_id
         self.numtasks = numtasks
 
-        observations = self.make_observations(tasks)
+        observations = self._make_observations(tasks)
         self.observations = observations
 
-        agent_params = self.make_agent_params()
+        agent_params = self._make_agent_params()
         self.agent_params = agent_params
-        predictions = self.get_predictions(agent_params, observations)
+        predictions = self._get_predictions(observations)
         self.predictions = predictions
 
-        answers = self.make_answers(session_id, observations, predictions)
+        answers = self._make_answers(observations, predictions)
         self.answers = answers
 
-        score = self.get_score(answers)
+        score = self._get_score(answers)
         self.score = score

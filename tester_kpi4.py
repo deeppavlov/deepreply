@@ -22,7 +22,7 @@ class Tester:
         self.answers = None
         self.score = None
 
-    # Generate params for EnsembleParaphraserAgent
+    # Generate params for SquadAgent
     def _make_agent_params(self):
         parser = ParlaiParser(True, True)
         SquadAgent.add_cmdline_args(parser)
@@ -46,7 +46,7 @@ class Tester:
     def init_agent(self):
         self.agent = SquadAgent(self._make_agent_params())
 
-    # Update tester config with or without [re]initiating agent
+    # Update Tester config with or without [re]initiating agent
     def update_config(self, config, init_agent=False):
         self.config = config
         if init_agent:
@@ -56,7 +56,7 @@ class Tester:
     def set_numtasks(self, numtasks):
         self.numtasks = numtasks
 
-    # Get kpi1 tasks via REST
+    # Get kpi4 tasks via REST
     def _get_tasks(self):
         get_url = self.config['kpis'][self.kpi_name]['settings_kpi']['rest_url']
         if self.numtasks in [None, 0]:
