@@ -5,6 +5,7 @@ import urllib.parse
 import urllib.request
 import tarfile
 import glob
+from datetime import datetime
 
 
 def get_model_files(config):
@@ -55,9 +56,13 @@ def get_modelfiles_paths(model_dir, model_files):
     return modelfiles_paths
 
 
+def log_results(config, log_str):
+    pass
+
+
 def main():
-    # Initialise optional params dict for further usage
     opt = {}
+    start_time = str(datetime.now())
 
     # Initialise environment variables
     print('Reading environment variables...')
@@ -70,7 +75,7 @@ def main():
     with open('config.json') as config_json:
         config = json.load(config_json)
 
-    # Make models data dir
+    kpi_name = config['kpi_name']
     data_dir = config['data_dir']
     os.makedirs(os.path.dirname(data_dir), exist_ok=True)
 
@@ -78,7 +83,6 @@ def main():
     model_files_dir = get_model_files(config)
 
     # Get model files list
-    kpi_name = config['kpi_name']
     opt['model_files'] = \
         get_modelfiles_paths(model_files_dir, config['kpis'][kpi_name]['settings_agent']['model_files_names'])
 
@@ -88,10 +92,22 @@ def main():
     tester_class = getattr(tester_module, 'Tester')
     tester = tester_class(config, opt)
     tester.run_test()
+    end_time = str(datetime.now())
     print('%s test finished, tasks number: %s, SCORE: %s' % (config['kpi_name'],
                                                              str(tester.numtasks),
                                                              str(tester.score)))
 
+    # Log test results
+    log_str = 'testing %s :\ntasks number: %s\nstart time: %s\nend time  : %s\nscore: %s' % (kpi_name,
+                                                                                             tester.numtasks,
+                                                                                             start_time,
+                                                                                             end_time,
+                                                                                             tester.score)
+    file_path = os.path.join(config['test_logs_dir'], '%s_%s.txt' % (kpi_name, start_time))
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    f = open(file_path, 'w')
+    f.write(log_str)
+    f.close
 
 if __name__ == '__main__':
     main()

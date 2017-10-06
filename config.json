@@ -4,8 +4,9 @@
 	"models_repo_url":"!!!DUMMY",
 	"embeddings_dir":"./build/",
 	"embeddings_repo_url":"!!!DUMMY",
+	"test_logs_dir":"./test_logs/",
 	"kpi_name":"kpi1",
-	"update_models":1,
+	"update_models":0,
 	"kpis":
 	{
 		"kpi1":
