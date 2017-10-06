@@ -6,7 +6,7 @@ import numpy as np
 from deeppavlov.agents.paraphraser.paraphraser import EnsembleParaphraserAgent
 
 
-class tester():
+class Tester:
 
     def __init__(self, config, opt):
         self.config = config

@@ -6,7 +6,7 @@ from parlai.core.params import ParlaiParser
 from deeppavlov.agents.ner.ner import NERAgent
 
 
-class tester():
+class Tester:
 
     def __init__(self, config, opt):
         self.config = config

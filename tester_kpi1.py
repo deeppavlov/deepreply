@@ -5,7 +5,7 @@ import requests
 from deeppavlov.agents.insults.insults_agents import EnsembleInsultsAgent
 
 
-class tester():
+class Tester:
 
     def __init__(self, config, opt):
         self.config = config

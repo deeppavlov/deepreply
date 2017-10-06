@@ -5,7 +5,7 @@
 	"embeddings_dir":"./build/",
 	"embeddings_repo_url":"!!!DUMMY",
 	"kpi_name":"kpi4",
-	"update_models":0,
+	"update_models":1,
 	"kpis":
 	{
 		"kpi1":
@@ -74,7 +74,7 @@
 					"tester_file":"tester_kpi4",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/squad/squad_final.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi4/qas",
-					"test_tasks_number":10
+					"test_tasks_number":1
 				},
 			"settings_agent":
 				{

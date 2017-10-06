@@ -14,8 +14,8 @@ def get_model_files(config):
     model_repo_url = config['kpis'][kpi_name]['settings_kpi']['model_repo_url']
     model_filename = os.path.basename(urllib.parse.urlsplit(model_repo_url).path)
     model_download_path = os.path.join(kpi_models_dir, model_filename)
-    model_extract_dir = os.path.join(os.path.dirname(model_download_path), \
-                             os.path.basename(model_download_path).split('.', maxsplit=-1)[0]) + '/'
+    model_extract_dir = os.path.join(os.path.dirname(model_download_path),
+                                     os.path.basename(model_download_path).split('.', maxsplit=-1)[0]) + '/'
 
     if update_models:
         # Delete existing extracted model files
@@ -85,10 +85,12 @@ def main():
     # Execute test
     print('Executing %s test...' % config['kpi_name'])
     tester_module = __import__(config['kpis'][kpi_name]['settings_kpi']['tester_file'])
-    tester_class = getattr(tester_module, 'tester')
+    tester_class = getattr(tester_module, 'Tester')
     tester = tester_class(config, opt)
     tester.run_test()
-    print('%s test finished, tasks number: %s, SCORE: %s' % (config['kpi_name'], str(tester.numtasks), str(tester.score)))
+    print('%s test finished, tasks number: %s, SCORE: %s' % (config['kpi_name'],
+                                                             str(tester.numtasks),
+                                                             str(tester.score)))
 
 
 if __name__ == '__main__':
