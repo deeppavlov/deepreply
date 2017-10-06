@@ -56,10 +56,6 @@ def get_modelfiles_paths(model_dir, model_files):
     return modelfiles_paths
 
 
-def log_results(config, log_str):
-    pass
-
-
 def main():
     opt = {}
     start_time = str(datetime.now())
@@ -107,7 +103,8 @@ def main():
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     f = open(file_path, 'w')
     f.write(log_str)
-    f.close
+    f.close()
+
 
 if __name__ == '__main__':
     main()
