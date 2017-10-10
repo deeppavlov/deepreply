@@ -7,3 +7,4 @@ test/
 maintenance.py
 debug/
 test_logs/
+coref_kernels.so
