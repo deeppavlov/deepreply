@@ -5,7 +5,7 @@
 	"embeddings_dir":"./build/",
 	"embeddings_repo_url":"!!!DUMMY",
 	"test_logs_dir":"./test_logs/",
-	"kpi_name":"kpi1",
+	"kpi_name":"kpi11",
 	"update_models":0,
 	"kpis":
 	{
@@ -107,6 +107,26 @@
 					"encoder_hidden_dim":300,
 					"projection_dim":300,
 					"pointer_dim":300
+				}
+		},
+		"kpi11":
+		{
+			"settings_kpi":
+				{
+					"tester_file":"tester_kpi11",
+					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/insults/insults_models_final.tar.gz",
+					"rest_url":"http://api.aibotbench.com/kpi11/qas",
+					"test_tasks_number":10
+				},
+			"settings_agent":
+				{
+					"model_files_names":["model.max.ckpt"],
+					"model_names":["pretrain_model"],
+					"model_dir":"./build/models/kpi11/",
+					"datatype":"test",
+					"language":"russian",
+					"chosen_metric":"conll-F-1",
+					"pretrained_model":1
 				}
 		}
 	}
