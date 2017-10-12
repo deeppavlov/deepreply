@@ -70,9 +70,7 @@ class Tester:
     # Prepare observations set
     def _make_observations(self, tasks):
         observations = []
-        print('Here are the tasks:')
         for task in tasks['qas']:
-            print(task)
             observations.append({
                 'id': task['id'],
                 'text': task['question']

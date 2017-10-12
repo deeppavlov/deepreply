@@ -5,8 +5,8 @@
 	"embeddings_dir":"./build/",
 	"embeddings_repo_url":"!!!DUMMY",
 	"test_logs_dir":"./test_logs/",
-	"kpi_name":"kpi11",
-	"update_models":0,
+	"kpi_name":"kpi3",
+	"update_models":1,
 	"kpis":
 	{
 		"kpi1":
@@ -16,7 +16,7 @@
 					"tester_file":"tester_kpi1",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/insults/insults_models_final.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi1/qas",
-					"test_tasks_number":100
+					"test_tasks_number":789
 				},
 			"settings_agent":
 				{
@@ -35,7 +35,7 @@
 					"tester_file":"tester_kpi2",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/paraphraser/paraphraser_models_final.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi2/qas",
-					"test_tasks_number":100
+					"test_tasks_number":192
 				},
 			"settings_agent":
 				{
@@ -50,7 +50,7 @@
 					"tester_file":"tester_kpi3",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/ner/ner_final.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi3/qas",
-					"test_tasks_number":10
+					"test_tasks_number":9
 				},
 			"settings_agent":
 				{
@@ -75,7 +75,7 @@
 					"tester_file":"tester_kpi4",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/squad/squad_final.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi4/qas",
-					"test_tasks_number":1
+					"test_tasks_number":10
 				},
 			"settings_agent":
 				{
