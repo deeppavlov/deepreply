@@ -65,7 +65,9 @@ class Tester:
             test_tasks_number = self.numtasks
         get_params = {'stage': 'test', 'quantity': test_tasks_number}
         get_response = requests.get(get_url, params=get_params)
-        tasks = json.loads(get_response.text)
+        #tasks = json.loads(get_response.text)
+        with open('/home/madlit/Downloads/squad_task.json') as json_data:
+            tasks = json.load(json_data)
         return tasks
 
     # Prepare observations set
@@ -91,10 +93,10 @@ class Tester:
             answers[obs['id']] = pred['text']
         tasks = self.tasks
         tasks['answers'] = answers
-        for paragraph in tasks['paragraphs']:
-            paragraph['context'] = ''
-            for qa in paragraph['qas']:
-                qa['question'] = ''
+        #for paragraph in tasks['paragraphs']:
+        #    paragraph['context'] = ''
+        #    for qa in paragraph['qas']:
+        #        qa['question'] = ''
         return tasks
 
     # Post answers data and get score
@@ -116,6 +118,7 @@ class Tester:
         self.tasks = tasks
         self.session_id = session_id
         self.numtasks = numtasks
+        print(tasks)
 
         observations = self._make_observations(tasks)
         self.observations = observations
@@ -128,6 +131,8 @@ class Tester:
 
         answers = self._make_answers(observations, predictions)
         self.answers = answers
+        print(answers)
+        print(json.dumps(answers))
 
         score = self._get_score(answers)
         self.score = score

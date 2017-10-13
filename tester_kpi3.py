@@ -4,7 +4,8 @@ import requests
 
 from parlai.core.params import ParlaiParser
 from deeppavlov.agents.ner.ner import NERAgent
-
+import build_utils as bu
+from parlai.core.agents import create_agent
 
 class Tester:
 
@@ -43,7 +44,26 @@ class Tester:
 
     # Initiate agent
     def init_agent(self):
-        self.agent = NERAgent(self._make_agent_params())
+        # self.agent = NERAgent(self._make_agent_params())
+        params = ['-t', 'deeppavlov.tasks.ner.agents',
+                    '-m', 'deeppavlov.agents.ner.ner:NERAgent',
+                    '-mf', './build/ner/ner',
+                    '-dt', 'test',
+                    '--batchsize', '2',
+                    '--display-examples', 'False',
+                    '--validation-every-n-epochs', '5',
+                    '--log-every-n-epochs', '1',
+                    '--log-every-n-secs', '-1',
+                    '--pretrained-model', './build/ner/ner',
+                    '--chosen-metrics', 'f1']
+        agent_settings = self.config['kpis'][self.kpi_name]['settings_agent']
+        model_files = self.opt['model_files']
+        opt = bu.arg_parse(params)
+        opt['model_file'] = os.path.dirname(model_files[0])
+        opt['pretrained_model'] = os.path.dirname(model_files[0])
+        opt['dict_file'] = os.path.join(os.path.dirname(model_files[0]), agent_settings['dict_files_names'])
+        self.agent = create_agent(opt)
+
 
     # Update Tester config with or without [re]initiating agent
     def update_config(self, config, init_agent=False):

@@ -5,8 +5,8 @@
 	"embeddings_dir":"./build/",
 	"embeddings_repo_url":"!!!DUMMY",
 	"test_logs_dir":"./test_logs/",
-	"kpi_name":"kpi3",
-	"update_models":1,
+	"kpi_name":"kpi11",
+	"update_models":0,
 	"kpis":
 	{
 		"kpi1":
@@ -57,10 +57,8 @@
 					"model_files_names":["model.ckpt"],
 					"dict_files_names":"ner.dict",
 					"datatype":"test",
-					"learning_rate":0.01,
 					"batchsize":2,
 					"display_examples":0,
-					"max_train_time":-1,
 					"validation_every_n_epochs":5,
 					"log_every_n_epochs":1,
 					"log_every_n_secs":-1,
@@ -75,7 +73,7 @@
 					"tester_file":"tester_kpi4",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/squad/squad_final.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi4/qas",
-					"test_tasks_number":10
+					"test_tasks_number":1
 				},
 			"settings_agent":
 				{
@@ -116,7 +114,7 @@
 					"tester_file":"tester_kpi11",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/insults/insults_models_final.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi11/qas",
-					"test_tasks_number":10
+					"test_tasks_number":20
 				},
 			"settings_agent":
 				{

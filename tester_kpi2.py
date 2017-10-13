@@ -4,6 +4,8 @@ import requests
 import numpy as np
 
 from deeppavlov.agents.paraphraser.paraphraser import EnsembleParaphraserAgent
+import build_utils as bu
+from parlai.core.agents import create_agent
 
 
 class Tester:
@@ -36,7 +38,25 @@ class Tester:
 
     # Initiate agent
     def init_agent(self):
-        self.agent = EnsembleParaphraserAgent(self._make_agent_params())
+        #self.agent = EnsembleParaphraserAgent(self._make_agent_params())
+        params = ['-t', 'deeppavlov.tasks.paraphrases.agents',
+                    '-m', 'deeppavlov.agents.paraphraser.paraphraser:EnsembleParaphraserAgent',
+                    #'-mf', './build/paraphraser/paraphraser',
+                    #'--model_files', './build/paraphraser/paraphraser',
+                    '--datatype', 'test',
+                    '--batchsize', '256',
+                    '--display-examples', 'False',
+                    #'--fasttext_embeddings_dict', './build/paraphraser/paraphraser.emb',
+                    #'--fasttext_model', './build/paraphraser/ft_0.8.3_nltk_yalen_sg_300.bin',
+                    '--bagging-folds-number', '5',
+                    '--chosen-metrics', 'f1']
+        embeddings_dir = self.config['embeddings_dir']
+        embedding_file = self.config['kpis'][self.kpi_name]['settings_agent']['fasttext_model']
+        model_files = self.opt['model_files']
+        opt = bu.arg_parse(params)
+        opt['model_files'] = model_files
+        opt['fasttext_model'] = os.path.join(embeddings_dir, embedding_file)
+        self.agent = create_agent(opt)
 
     # Update Tester config with or without [re]initiating agent
     def update_config(self, config, init_agent=False):

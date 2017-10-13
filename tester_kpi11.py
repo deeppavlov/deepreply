@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import re
 
 from parlai.core.params import ParlaiParser
 from deeppavlov.agents.coreference.agents import CoreferenceAgent
@@ -63,6 +64,8 @@ class Tester:
         get_params = {'stage': 'test', 'quantity': test_tasks_number}
         get_response = requests.get(get_url, params=get_params)
         tasks = json.loads(get_response.text)
+        #with open('/home/madlit/Downloads/cored_doc.json') as json_data:
+        #    tasks = json.load(json_data)
         return tasks
 
     # Prepare observations set
@@ -70,7 +73,12 @@ class Tester:
         observations = []
         for task in tasks['qas']:
             conll_str = str(task['question'])
-            #print(conll_str)
+            match = re.search(r'\n\n#end document', conll_str)
+            if match is None:
+                conll_str = re.sub(r'\n#end document', r'\n\n#end document', conll_str)
+            #conll_str = conll_str.replace('\ufeff', '')
+            #conll_str = conll_str.replace('—', '-')
+            print(conll_str)
             observations.append({
                 'id': task['id'],
                 'conll_str': conll_str
@@ -102,6 +110,8 @@ class Tester:
         predictions = {}
         for observation in observations:
             self.agent.observe(observation)
+            print('CURRENT OBSERVATION:')
+            print(observation)
             prediction = self.agent.predict()
             predictions[observation['id']] = self._extract_coref(prediction)
         return predictions
