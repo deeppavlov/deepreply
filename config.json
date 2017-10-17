@@ -7,8 +7,9 @@
 	"test_logs_dir":"./test_logs/",
 	"kpi_name":"kpi11",
 	"kpi_sequence":"!!!DUMMY",
-	"iterations_num":1,
+	"iterations_num":20,
 	"update_models":1,
+	"log_tester_state":1,
 	"kpis":
 	{
 		"kpi1":
@@ -18,7 +19,7 @@
 					"tester_file":"tester_kpi1",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/insults/insults_models_final_2017_10_13.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi1/qas",
-					"test_tasks_number":5
+					"test_tasks_number":789
 				},
 			"settings_agent":
 				{
@@ -34,7 +35,7 @@
 					"tester_file":"tester_kpi2",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/paraphraser/paraphraser_models_final.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi2/qas",
-					"test_tasks_number":5
+					"test_tasks_number":192
 				},
 			"settings_agent":
 				{
@@ -81,7 +82,7 @@
 					"tester_file":"tester_kpi11",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/coreference/coreference_scorer_model_16.10.17.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi11/qas",
-					"test_tasks_number":3
+					"test_tasks_number":5
 				},
 			"settings_agent":
 				{

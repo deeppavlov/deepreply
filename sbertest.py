@@ -86,6 +86,7 @@ def main():
     tester = tester_class(config, opt)
     tester.init_agent()
     iters = config['iterations_num']
+    log_tester_state = config['log_tester_state']
     for _ in range(iters):
         print('Executing %s test...' % config['kpi_name'])
         start_time = str(datetime.now())
@@ -95,12 +96,23 @@ def main():
                                                                  str(tester.numtasks),
                                                                  str(tester.score)))
 
+        # Log tester object state
+        if log_tester_state:
+            tester_state = 'tasks: %s' \
+                           '\nobservations: %s' \
+                           '\npredictions: %s' \
+                           '\nanswers: %s' % (tester.tasks, tester.observations, tester.predictions, tester.answers)
+        else:
+            tester_state = ''
+
         # Log test results
-        log_str = 'testing %s :\ntasks number: %s\nstart time: %s\nend time  : %s\nscore: %s' % (kpi_name,
-                                                                                                 tester.numtasks,
-                                                                                                 start_time,
-                                                                                                 end_time,
-                                                                                                 tester.score)
+        log_str = 'testing %s :' \
+                  '\ntasks number: %s' \
+                  '\nstart time: %s' \
+                  '\nend time  : %s' \
+                  '\nscore: %s' \
+                  '\n\n %s' % (kpi_name, tester.numtasks, start_time, end_time, tester.score, tester_state)
+
         file_path = os.path.join(config['test_logs_dir'], '%s_%s.txt' % (kpi_name, start_time))
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
         f = open(file_path, 'w')

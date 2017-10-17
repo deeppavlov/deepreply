@@ -120,6 +120,8 @@ class Tester:
             id_predict[obs] = self._extract_coref(''.join(pred))
         tasks = self.tasks
         tasks['answers'] = id_predict
+        # Reduce POST request size
+        tasks['qas'] = []
         return tasks
 
     # Post answers data and get score
