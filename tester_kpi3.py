@@ -2,8 +2,6 @@ import os
 import json
 import requests
 
-from parlai.core.params import ParlaiParser
-from deeppavlov.agents.ner.ner import NERAgent
 import build_utils as bu
 from parlai.core.agents import create_agent
 
@@ -23,39 +21,17 @@ class Tester:
         self.answers = None
         self.score = None
 
-    # Generate params for NERAgent
-    def _make_agent_params(self):
-        parser = ParlaiParser(True, True)
-        NERAgent.add_cmdline_args(parser)
-        args = ['-t deeppavlov.tasks.ner.agents',
-                '-m deeppavlov.agents.ner.ner:NERAgent']
-        agent_params = parser.parse_args(args=args)
-        agent_settings = self.config['kpis'][self.kpi_name]['settings_agent']
-        for key, value in agent_settings.items():
-            if key not in ['model_files_names', 'dict_files_names', 'display_examples']:
-                agent_params[key] = value
-        model_files = self.opt['model_files']
-        # model_file and pretrained_model params should always point to the same dir with pretrained model
-        agent_params['model_file'] = os.path.dirname(model_files[0])
-        agent_params['pretrained_model'] = os.path.dirname(model_files[0])
-        agent_params['dict_file'] = os.path.join(os.path.dirname(model_files[0]), agent_settings['dict_files_names'])
-        agent_params['display_examples'] = bool(agent_settings['display_examples'])
-        return agent_params
-
     # Initiate agent
     def init_agent(self):
-        # self.agent = NERAgent(self._make_agent_params())
         params = ['-t', 'deeppavlov.tasks.ner.agents',
-                    '-m', 'deeppavlov.agents.ner.ner:NERAgent',
-                    '-mf', './build/ner/ner',
-                    '-dt', 'test',
-                    '--batchsize', '2',
-                    '--display-examples', 'False',
-                    '--validation-every-n-epochs', '5',
-                    '--log-every-n-epochs', '1',
-                    '--log-every-n-secs', '-1',
-                    '--pretrained-model', './build/ner/ner',
-                    '--chosen-metrics', 'f1']
+            '-m', 'deeppavlov.agents.ner.ner:NERAgent',
+            '-dt', 'test',
+            '--batchsize', '2',
+            '--display-examples', 'False',
+            '--validation-every-n-epochs', '5',
+            '--log-every-n-epochs', '1',
+            '--log-every-n-secs', '-1',
+            '--chosen-metrics', 'f1']
         agent_settings = self.config['kpis'][self.kpi_name]['settings_agent']
         model_files = self.opt['model_files']
         opt = bu.arg_parse(params)
@@ -93,7 +69,8 @@ class Tester:
         for task in tasks['qas']:
             observations.append({
                 'id': task['id'],
-                'text': task['question']
+                #'text': task['question']
+                'text': task['question'].split('\t')[0]
             })
         return observations
 
@@ -136,12 +113,12 @@ class Tester:
         self.tasks = tasks
         self.session_id = session_id
         self.numtasks = numtasks
+        print(tasks)
 
         observations = self._make_observations(tasks)
         self.observations = observations
+        print(observations)
 
-        agent_params = self._make_agent_params()
-        self.agent_params = agent_params
         predictions = self._get_predictions(observations)
         self.predictions = predictions
 

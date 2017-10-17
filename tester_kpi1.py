@@ -2,7 +2,8 @@ import os
 import json
 import requests
 
-from deeppavlov.agents.insults.insults_agents import EnsembleInsultsAgent
+import build_utils as bu
+from parlai.core.agents import create_agent
 
 
 class Tester:
@@ -21,25 +22,28 @@ class Tester:
         self.answers = None
         self.score = None
 
-    # Generate params for EnsembleInsultsAgent
-    def _make_agent_params(self):
+    # Initiate agent
+    def init_agent(self):
+        params = ['-t', 'deeppavlov.tasks.insults.agents:FullTeacher',
+            '-m', 'deeppavlov.agents.insults.insults_agents:EnsembleInsultsAgent',
+            '--model_coefs', '0.3333333', '0.3333333', '0.3333334',
+            '--datatype', 'test',
+            '--batchsize', '64',
+            '--display-examples', 'False',
+            '--max_sequence_length', '100',
+            '--filters_cnn', '256',
+            '--kernel_sizes_cnn', '1 2 3',
+            '--embedding_dim', '100',
+            '--dense_dim', '100']
         embeddings_dir = self.config['embeddings_dir']
         embedding_file = self.config['kpis'][self.kpi_name]['settings_agent']['fasttext_model']
         model_files = self.opt['model_files']
-        agent_params = {
-            'model_files': model_files,
-            'model_names': self.config['kpis'][self.kpi_name]['settings_agent']['model_names'],
-            'model_coefs': self.config['kpis'][self.kpi_name]['settings_agent']['model_coefs'],
-            'datatype': 'test',
-            'kernel_sizes_cnn': self.config['kpis'][self.kpi_name]['settings_agent']['kernel_sizes_cnn'],
-            'pool_sizes_cnn': self.config['kpis'][self.kpi_name]['settings_agent']['pool_sizes_cnn'],
-            'fasttext_model': os.path.join(embeddings_dir, embedding_file)
-        }
-        return agent_params
-
-    # Initiate agent
-    def init_agent(self):
-        self.agent = EnsembleInsultsAgent(self._make_agent_params())
+        opt = bu.arg_parse(params)
+        opt['model_files'] = model_files
+        opt['model_names'] = self.config['kpis'][self.kpi_name]['settings_agent']['model_names']
+        opt['raw_dataset_path'] = os.path.dirname(model_files[0])
+        opt['fasttext_model'] = os.path.join(embeddings_dir, embedding_file)
+        self.agent = create_agent(opt)
 
     # Update Tester config with or without [re]initiating agent
     def update_config(self, config, init_agent=False):
@@ -110,9 +114,6 @@ class Tester:
 
         observations = self._make_observations(tasks)
         self.observations = observations
-
-        agent_params = self._make_agent_params()
-        self.agent_params = agent_params
 
         predictions = self._get_predictions(observations)
         self.predictions = predictions

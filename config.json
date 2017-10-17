@@ -5,7 +5,7 @@
 	"embeddings_dir":"./build/",
 	"embeddings_repo_url":"!!!DUMMY",
 	"test_logs_dir":"./test_logs/",
-	"kpi_name":"kpi11",
+	"kpi_name":"kpi11_1",
 	"update_models":0,
 	"kpis":
 	{
@@ -14,17 +14,14 @@
 			"settings_kpi":
 				{
 					"tester_file":"tester_kpi1",
-					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/insults/insults_models_final.tar.gz",
+					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/insults/insults_models_final_2017_10_13.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi1/qas",
 					"test_tasks_number":789
 				},
 			"settings_agent":
 				{
-					"model_files_names":["cnn_word_0", "cnn_word_1", "cnn_word_2", "log_reg", "svc"],
-					"model_names":["cnn_word", "cnn_word", "cnn_word", "log_reg", "svc"],
-					"model_coefs":[0.10, 0.10, 0.10, 0.2, 0.5],
-					"kernel_sizes_cnn":"1 2 3 2 1",
-					"pool_sizes_cnn":"2 2 2 2 2",
+					"model_files_names":["cnn_word_0", "cnn_word_1", "cnn_word_2"],
+					"model_names":["cnn_word", "cnn_word", "cnn_word"],
 					"fasttext_model":"reddit_fasttext_model.bin"
 				}
 		},
@@ -48,21 +45,14 @@
 			"settings_kpi":
 				{
 					"tester_file":"tester_kpi3",
-					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/ner/ner_final.tar.gz",
+					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/ner/ner_dgx2.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi3/qas",
-					"test_tasks_number":9
+					"test_tasks_number":1
 				},
 			"settings_agent":
 				{
 					"model_files_names":["model.ckpt"],
-					"dict_files_names":"ner.dict",
-					"datatype":"test",
-					"batchsize":2,
-					"display_examples":0,
-					"validation_every_n_epochs":5,
-					"log_every_n_epochs":1,
-					"log_every_n_secs":-1,
-					"chosen_metric":"f1"
+					"dict_files_names":"ner.dict"
 				},
 			"settings_agent_comment":"dict_files_names param should always point to .dict file"
 		},
@@ -71,7 +61,7 @@
 			"settings_kpi":
 				{
 					"tester_file":"tester_kpi4",
-					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/squad/squad_final.tar.gz",
+					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/squad/squad_bushkov.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi4/qas",
 					"test_tasks_number":1
 				},
@@ -107,6 +97,26 @@
 					"pointer_dim":300
 				}
 		},
+		"kpi11_2":
+		{
+			"settings_kpi":
+				{
+					"tester_file":"tester_kpi11_2",
+					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/insults/insults_models_final.tar.gz",
+					"rest_url":"http://api.aibotbench.com/kpi11/qas",
+					"test_tasks_number":20
+				},
+			"settings_agent":
+				{
+					"model_files_names":["model.max.ckpt"],
+					"model_names":["pretrain_model"],
+					"model_dir":"./build/models/kpi11/",
+					"datatype":"test",
+					"language":"russian",
+					"chosen_metric":"conll-F-1",
+					"pretrained_model":1
+				}
+		},
 		"kpi11":
 		{
 			"settings_kpi":
@@ -114,7 +124,7 @@
 					"tester_file":"tester_kpi11",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/insults/insults_models_final.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi11/qas",
-					"test_tasks_number":20
+					"test_tasks_number":1
 				},
 			"settings_agent":
 				{

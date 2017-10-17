@@ -2,8 +2,8 @@ import os
 import json
 import requests
 
-from parlai.core.params import ParlaiParser
-from deeppavlov.agents.squad.squad import SquadAgent
+import build_utils as bu
+from parlai.core.agents import create_agent
 
 
 class Tester:
@@ -22,29 +22,41 @@ class Tester:
         self.answers = None
         self.score = None
 
-    # Generate params for SquadAgent
-    def _make_agent_params(self):
-        parser = ParlaiParser(True, True)
-        SquadAgent.add_cmdline_args(parser)
-        args = ['-t squad',
-                '-m deeppavlov.agents.squad.squad:SquadAgent']
-        agent_params = parser.parse_args(args=args)
-        agent_settings = self.config['kpis'][self.kpi_name]['settings_agent']
-        for key, value in agent_settings.items():
-            if key not in ['model_files_names', 'display_examples']:
-                agent_params[key] = value
-        agent_params['display_examples'] = bool(agent_settings['display_examples'])
+    # Initiate agent
+    def init_agent(self):
+        params = ['-t', 'squad',
+                    '-m', 'deeppavlov.agents.squad.squad:SquadAgent',
+                    '--batchsize', '64',
+                    '--display-examples', 'False',
+                    '--num-epochs', '-1',
+                    '--log-every-n-secs', '60',
+                    '--log-every-n-epochs', '-1',
+                    '--validation-every-n-secs', '1800',
+                    '--validation-every-n-epochs', '-1',
+                    '--chosen-metrics', 'f1',
+                    '--validation-patience', '5',
+                    '--type', 'fastqa_default',
+                    '--linear_dropout', '0.0',
+                    '--embedding_dropout', '0.5',
+                    '--rnn_dropout', '0.0',
+                    '--recurrent_dropout', '0.0',
+                    '--input_dropout', '0.0',
+                    '--output_dropout', '0.0',
+                    '--context_enc_layers', '1',
+                    '--question_enc_layers', '1',
+                    '--encoder_hidden_dim', '300',
+                    '--projection_dim', '300',
+                    '--pointer_dim', '300',
+                    '--datatype', 'test']
+        opt = bu.arg_parse(params)
         embeddings_dir = self.config['embeddings_dir']
         embedding_file = self.config['kpis'][self.kpi_name]['settings_agent']['embedding_file']
         model_files = self.opt['model_files']
-        agent_params['embedding_file'] = os.path.join(embeddings_dir, embedding_file)
-        agent_params['model_file'] = model_files[0]
-        agent_params['pretrained_model'] = model_files[0]
-        return agent_params
-
-    # Initiate agent
-    def init_agent(self):
-        self.agent = SquadAgent(self._make_agent_params())
+        opt['embedding_file'] = os.path.join(embeddings_dir, embedding_file)
+        opt['model_file'] = model_files[0]
+        opt['pretrained_model'] = model_files[0]
+        opt['dict_file'] = os.path.join(os.path.dirname(model_files[0]), 'squad1.dict')
+        self.agent = create_agent(opt)
 
     # Update Tester config with or without [re]initiating agent
     def update_config(self, config, init_agent=False):
@@ -65,9 +77,9 @@ class Tester:
             test_tasks_number = self.numtasks
         get_params = {'stage': 'test', 'quantity': test_tasks_number}
         get_response = requests.get(get_url, params=get_params)
-        #tasks = json.loads(get_response.text)
-        with open('/home/madlit/Downloads/squad_task.json') as json_data:
-            tasks = json.load(json_data)
+        tasks = json.loads(get_response.text)
+        #with open('/home/madlit/Downloads/squad_task.json') as json_data:
+        #    tasks = json.load(json_data)
         return tasks
 
     # Prepare observations set
@@ -118,21 +130,29 @@ class Tester:
         self.tasks = tasks
         self.session_id = session_id
         self.numtasks = numtasks
+        print('Tasks')
         print(tasks)
 
         observations = self._make_observations(tasks)
         self.observations = observations
+        #print('Observations')
+        #print(observations)
 
-        agent_params = self._make_agent_params()
-        self.agent_params = agent_params
+        #agent_params = self._make_agent_params()
+        #self.agent_params = agent_params
 
         predictions = self._get_predictions(observations)
         self.predictions = predictions
+        #print('Predictions')
+        #print(predictions)
 
         answers = self._make_answers(observations, predictions)
         self.answers = answers
+        #print('Answers')
         print(answers)
         print(json.dumps(answers))
 
         score = self._get_score(answers)
         self.score = score
+        #print('Score')
+        #print(score)

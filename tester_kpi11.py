@@ -3,8 +3,8 @@ import json
 import requests
 import re
 
-from parlai.core.params import ParlaiParser
-from deeppavlov.agents.coreference.agents import CoreferenceAgent
+import build_utils as bu
+from parlai.core.agents import create_agent
 
 
 class Tester:
@@ -23,26 +23,25 @@ class Tester:
         self.answers = None
         self.score = None
 
-    # Generate params for CoreferenceAgent
-    def _make_agent_params(self):
-        parser = ParlaiParser(True, True)
-        CoreferenceAgent.add_cmdline_args(parser)
-        args = ['-t deeppavlov.tasks.coreference.agents',
-                '-m deeppavlov.agents.coreference.agents:CoreferenceAgent']
-        agent_params = parser.parse_args(args=args)
-        agent_settings = self.config['kpis'][self.kpi_name]['settings_agent']
-        agent_params['model_file'] = agent_settings['model_dir']
-        agent_params['name'] = agent_settings['model_names'][0]
-        agent_params['datatype'] = agent_settings['datatype']
-        agent_params['language'] = agent_settings['language']
-        agent_params['chosen_metric'] = agent_settings['chosen_metric']
-        agent_params['pretrained_model'] = bool(agent_settings['pretrained_model'])
-        print(agent_params)
-        return agent_params
-
     # Initiate agent
     def init_agent(self):
-        self.agent = CoreferenceAgent(self._make_agent_params())
+        params = ['-t', 'deeppavlov.tasks.coreference_scorer_model.agents:CoreferenceTeacher',
+                    '-m', 'deeppavlov.agents.coreference_scorer_model.agents:CoreferenceAgent',
+                    '--display-examples', 'False',
+                    '--num-epochs', '20',
+                    '--log-every-n-secs', '-1',
+                    '--log-every-n-epochs', '1',
+                    '--validation-every-n-epochs', '1',
+                    '--chosen-metrics', 'f1',
+                    '--validation-patience', '20',
+                    #'--language', 'russian',
+                    '--datatype', 'test']
+        opt = bu.arg_parse(params)
+        opt['model_file'] = '/home/madlit/github/sbertest/build/models/kpi11_1'
+        opt['pretrained_model'] = '/home/madlit/github/sbertest/build/models/kpi11_1'
+        opt['embeddings_filename'] = 'ft_0.8.3_nltk_yalen_sg_300.bin'
+        print(opt)
+        self.agent = create_agent(opt)
 
     # Update Tester config with or without [re]initiating agent
     def update_config(self, config, init_agent=False):
@@ -73,15 +72,22 @@ class Tester:
         observations = []
         for task in tasks['qas']:
             conll_str = str(task['question'])
+            doc_num = str(re.search(r'#begin document [(].+[)];\n([0-9]+)', conll_str).group(1))
+            conll_str = re.sub(r'(?P<subst>#begin document [(].+[)];)',
+                               '#begin document(%s); part 0' % doc_num,
+                               conll_str)
             match = re.search(r'\n\n#end document', conll_str)
             if match is None:
                 conll_str = re.sub(r'\n#end document', r'\n\n#end document', conll_str)
-            #conll_str = conll_str.replace('\ufeff', '')
-            #conll_str = conll_str.replace('—', '-')
             print(conll_str)
+            observation = {
+                'conll': [],
+                'valid_conll': [conll_str.split('\n')],
+                'id': ''
+            }
             observations.append({
                 'id': task['id'],
-                'conll_str': conll_str
+                'observation': observation
             })
         return observations
 
@@ -109,11 +115,11 @@ class Tester:
     def _get_predictions(self, observations):
         predictions = {}
         for observation in observations:
-            self.agent.observe(observation)
-            print('CURRENT OBSERVATION:')
-            print(observation)
-            prediction = self.agent.predict()
-            predictions[observation['id']] = self._extract_coref(prediction)
+            self.agent.observe(observation['observation'])
+            prediction = self.agent.act()
+            #predictions[observation['id']] = self._extract_coref(prediction)
+            predictions[observation['id']] = self._extract_coref(''.join(prediction['valid_conll'][0]))
+            print(predictions[observation['id']])
         return predictions
 
     # Generate answers data
@@ -152,9 +158,6 @@ class Tester:
         self.observations = observations
         print('Observations:')
         print(observations)
-
-        #agent_params = self._make_agent_params()
-        #self.agent_params = agent_params
 
         predictions = self._get_predictions(observations)
         self.predictions = predictions
