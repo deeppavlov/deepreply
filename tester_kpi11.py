@@ -34,12 +34,14 @@ class Tester:
                     '--validation-every-n-epochs', '1',
                     '--chosen-metrics', 'f1',
                     '--validation-patience', '20',
-                    #'--language', 'russian',
                     '--datatype', 'test']
         opt = bu.arg_parse(params)
-        opt['model_file'] = '/home/madlit/github/sbertest/build/models/kpi11_1'
-        opt['pretrained_model'] = '/home/madlit/github/sbertest/build/models/kpi11_1'
-        opt['embeddings_filename'] = 'ft_0.8.3_nltk_yalen_sg_300.bin'
+        #opt['model_file'] = self.config['kpis'][self.kpi_name]['settings_agent']['model_dir']
+        #opt['pretrained_model'] = self.config['kpis'][self.kpi_name]['settings_agent']['model_dir']
+        model_files = self.opt['model_files']
+        opt['model_file'] = os.path.dirname(model_files[0])
+        opt['pretrained_model'] = os.path.dirname(model_files[0])
+        opt['embeddings_filename'] = self.config['kpis'][self.kpi_name]['settings_agent']['embedding_file']
         print(opt)
         self.agent = create_agent(opt)
 
@@ -63,15 +65,16 @@ class Tester:
         get_params = {'stage': 'test', 'quantity': test_tasks_number}
         get_response = requests.get(get_url, params=get_params)
         tasks = json.loads(get_response.text)
-        #with open('/home/madlit/Downloads/cored_doc.json') as json_data:
-        #    tasks = json.load(json_data)
         return tasks
 
     # Prepare observations set
     def _make_observations(self, tasks):
-        observations = []
+        id = []
+        observation = {'conll': [], 'valid_conll': [], 'id': ''}
         for task in tasks['qas']:
             conll_str = str(task['question'])
+
+            # Preprocess conll
             doc_num = str(re.search(r'#begin document [(].+[)];\n([0-9]+)', conll_str).group(1))
             conll_str = re.sub(r'(?P<subst>#begin document [(].+[)];)',
                                '#begin document(%s); part 0' % doc_num,
@@ -79,33 +82,25 @@ class Tester:
             match = re.search(r'\n\n#end document', conll_str)
             if match is None:
                 conll_str = re.sub(r'\n#end document', r'\n\n#end document', conll_str)
-            print(conll_str)
-            observation = {
-                'conll': [],
-                'valid_conll': [conll_str.split('\n')],
-                'id': ''
-            }
-            observations.append({
-                'id': task['id'],
-                'observation': observation
-            })
+
+            # Prepare task
+            id.append(task['id'])
+            observation['valid_conll'].append(conll_str.split('\n'))
+
+        observations = {'id': id, 'observation': observation}
         return observations
 
     def _extract_coref(self, conll):
         coref_str = ''
         lines = conll.split('\n')
-        #lines = conll['conll_str'].split('\n')
         for i in range(len(lines)):
             if lines[i].startswith("#begin"):
-                #continue
                 coref_str += ' '
             elif lines[i].startswith("#end document"):
-                #continue
                 coref_str += ' '
             else:
                 row = lines[i].split('\t')
                 if len(row) == 1:
-                    #continue
                     coref_str += ' '
                 else:
                     coref_str += row[-1] + ' '
@@ -113,24 +108,19 @@ class Tester:
 
     # Process observations via algorithm
     def _get_predictions(self, observations):
-        predictions = {}
-        for observation in observations:
-            self.agent.observe(observation['observation'])
-            prediction = self.agent.act()
-            #predictions[observation['id']] = self._extract_coref(prediction)
-            predictions[observation['id']] = self._extract_coref(''.join(prediction['valid_conll'][0]))
-            print(predictions[observation['id']])
+        self.agent.observe(observations['observation'])
+        predictions = self.agent.act()
         return predictions
 
     # Generate answers data
-    def _make_answers(self, predictions):
-        answers = {}
-        answers['id'] = self.tasks['id']
-        answers['answers'] = predictions
-        return answers
-        #tasks = self.tasks
-        #tasks['answers'] = predictions
-        #return tasks
+    def _make_answers(self, observations, predictions):
+        id_predict = {}
+        observe_predict = list(zip(observations['id'], predictions['valid_conll']))
+        for obs, pred in observe_predict:
+            id_predict[obs] = self._extract_coref(''.join(pred))
+        tasks = self.tasks
+        tasks['answers'] = id_predict
+        return tasks
 
     # Post answers data and get score
     def _get_score(self, answers):
@@ -151,25 +141,15 @@ class Tester:
         self.tasks = tasks
         self.session_id = session_id
         self.numtasks = numtasks
-        print('Tasks:')
-        print(tasks)
 
         observations = self._make_observations(tasks)
         self.observations = observations
-        print('Observations:')
-        print(observations)
 
         predictions = self._get_predictions(observations)
         self.predictions = predictions
-        print('Predictions:')
-        print(predictions)
 
-        answers = self._make_answers(predictions)
+        answers = self._make_answers(observations, predictions)
         self.answers = answers
-        print('answers:')
-        print(json.dumps(answers))
 
         score = self._get_score(answers)
         self.score = score
-        print('score:')
-        print(score)

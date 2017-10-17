@@ -5,8 +5,10 @@
 	"embeddings_dir":"./build/",
 	"embeddings_repo_url":"!!!DUMMY",
 	"test_logs_dir":"./test_logs/",
-	"kpi_name":"kpi11_1",
-	"update_models":0,
+	"kpi_name":"kpi2",
+	"kpi_sequence":"!!!DUMMY",
+	"iterations_num":1,
+	"update_models":1,
 	"kpis":
 	{
 		"kpi1":
@@ -16,13 +18,13 @@
 					"tester_file":"tester_kpi1",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/insults/insults_models_final_2017_10_13.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi1/qas",
-					"test_tasks_number":789
+					"test_tasks_number":5
 				},
 			"settings_agent":
 				{
 					"model_files_names":["cnn_word_0", "cnn_word_1", "cnn_word_2"],
 					"model_names":["cnn_word", "cnn_word", "cnn_word"],
-					"fasttext_model":"reddit_fasttext_model.bin"
+					"embedding_file":"reddit_fasttext_model.bin"
 				}
 		},
 		"kpi2":
@@ -32,12 +34,12 @@
 					"tester_file":"tester_kpi2",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/paraphraser/paraphraser_models_final.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi2/qas",
-					"test_tasks_number":192
+					"test_tasks_number":5
 				},
 			"settings_agent":
 				{
 					"model_files_names":["maxpool_match_0", "maxpool_match_1", "maxpool_match_2", "maxpool_match_3", "maxpool_match_4"],
-					"fasttext_model":"ft_0.8.3_nltk_yalen_sg_300.bin"
+					"embedding_file":"ft_0.8.3_nltk_yalen_sg_300.bin"
 				}
 		},
 		"kpi3":
@@ -47,7 +49,7 @@
 					"tester_file":"tester_kpi3",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/ner/ner_dgx2.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi3/qas",
-					"test_tasks_number":1
+					"test_tasks_number":5
 				},
 			"settings_agent":
 				{
@@ -63,58 +65,13 @@
 					"tester_file":"tester_kpi4",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/squad/squad_bushkov.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi4/qas",
-					"test_tasks_number":1
+					"test_tasks_number":5
 				},
 			"settings_agent":
 				{
 					"model_files_names":["squad1"],
 					"embedding_file":"glove.840B.300d.txt",
-					"datatype":"test",
-					"batchsize":64,
-					"display_examples":0,
-					"max_train_time":-1,
-					"num_epochs":-1,
-					"log_every_n_secs":60,
-					"log_every_n_epochs":-1,
-					"validation_every_n_secs":1800,
-					"validation_every_n_epochs":-1,
-					"chosen_metric":"f1",
-					"validation_patience":5,
-					"lr_drop_patience":1,
-					"type":"fastqa_default",
-					"lr":0.0001,
-					"lr_drop":0.3,
-					"linear_dropout":0.0,
-					"embedding_dropout":0.5,
-					"rnn_dropout":0.0,
-					"recurrent_dropout":0.0,
-					"input_dropout":0.0,
-					"output_dropout":0.0,
-					"context_enc_layers":1,
-					"question_enc_layers":1,
-					"encoder_hidden_dim":300,
-					"projection_dim":300,
-					"pointer_dim":300
-				}
-		},
-		"kpi11_2":
-		{
-			"settings_kpi":
-				{
-					"tester_file":"tester_kpi11_2",
-					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/insults/insults_models_final.tar.gz",
-					"rest_url":"http://api.aibotbench.com/kpi11/qas",
-					"test_tasks_number":20
-				},
-			"settings_agent":
-				{
-					"model_files_names":["model.max.ckpt"],
-					"model_names":["pretrain_model"],
-					"model_dir":"./build/models/kpi11/",
-					"datatype":"test",
-					"language":"russian",
-					"chosen_metric":"conll-F-1",
-					"pretrained_model":1
+					"dict_files_names":"squad1.dict"
 				}
 		},
 		"kpi11":
@@ -122,19 +79,15 @@
 			"settings_kpi":
 				{
 					"tester_file":"tester_kpi11",
-					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/insults/insults_models_final.tar.gz",
+					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/coreference/coreference_scorer_model_16.10.17.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi11/qas",
-					"test_tasks_number":1
+					"test_tasks_number":5
 				},
 			"settings_agent":
 				{
-					"model_files_names":["model.max.ckpt"],
-					"model_names":["pretrain_model"],
+					"model_files_names":["model.index"],
 					"model_dir":"./build/models/kpi11/",
-					"datatype":"test",
-					"language":"russian",
-					"chosen_metric":"conll-F-1",
-					"pretrained_model":1
+					"embedding_file":"ft_0.8.3_nltk_yalen_sg_300.bin"
 				}
 		}
 	}

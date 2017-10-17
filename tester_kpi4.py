@@ -51,11 +51,12 @@ class Tester:
         opt = bu.arg_parse(params)
         embeddings_dir = self.config['embeddings_dir']
         embedding_file = self.config['kpis'][self.kpi_name]['settings_agent']['embedding_file']
+        dict_file = self.config['kpis'][self.kpi_name]['settings_agent']['dict_files_names']
         model_files = self.opt['model_files']
         opt['embedding_file'] = os.path.join(embeddings_dir, embedding_file)
         opt['model_file'] = model_files[0]
         opt['pretrained_model'] = model_files[0]
-        opt['dict_file'] = os.path.join(os.path.dirname(model_files[0]), 'squad1.dict')
+        opt['dict_file'] = os.path.join(os.path.dirname(model_files[0]), dict_file)
         self.agent = create_agent(opt)
 
     # Update Tester config with or without [re]initiating agent
@@ -78,8 +79,6 @@ class Tester:
         get_params = {'stage': 'test', 'quantity': test_tasks_number}
         get_response = requests.get(get_url, params=get_params)
         tasks = json.loads(get_response.text)
-        #with open('/home/madlit/Downloads/squad_task.json') as json_data:
-        #    tasks = json.load(json_data)
         return tasks
 
     # Prepare observations set
@@ -130,29 +129,15 @@ class Tester:
         self.tasks = tasks
         self.session_id = session_id
         self.numtasks = numtasks
-        print('Tasks')
-        print(tasks)
 
         observations = self._make_observations(tasks)
         self.observations = observations
-        #print('Observations')
-        #print(observations)
-
-        #agent_params = self._make_agent_params()
-        #self.agent_params = agent_params
 
         predictions = self._get_predictions(observations)
         self.predictions = predictions
-        #print('Predictions')
-        #print(predictions)
 
         answers = self._make_answers(observations, predictions)
         self.answers = answers
-        #print('Answers')
-        print(answers)
-        print(json.dumps(answers))
 
         score = self._get_score(answers)
         self.score = score
-        #print('Score')
-        #print(score)

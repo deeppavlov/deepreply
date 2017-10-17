@@ -15,8 +15,9 @@ def get_model_files(config):
     model_repo_url = config['kpis'][kpi_name]['settings_kpi']['model_repo_url']
     model_filename = os.path.basename(urllib.parse.urlsplit(model_repo_url).path)
     model_download_path = os.path.join(kpi_models_dir, model_filename)
-    model_extract_dir = os.path.join(os.path.dirname(model_download_path),
-                                     os.path.basename(model_download_path).split('.', maxsplit=-1)[0]) + '/'
+    #model_extract_dir = os.path.join(os.path.dirname(model_download_path),
+    #                                 os.path.basename(model_download_path).split('.', maxsplit=-1)[0]) + '/'
+    model_extract_dir = model_download_path[:model_download_path.rfind(".tar.gz")] + '/'
 
     if update_models:
         # Delete existing extracted model files
@@ -58,7 +59,6 @@ def get_modelfiles_paths(model_dir, model_files):
 
 def main():
     opt = {}
-    start_time = str(datetime.now())
 
     # Initialise environment variables
     print('Reading environment variables...')
@@ -83,27 +83,31 @@ def main():
         get_modelfiles_paths(model_files_dir, config['kpis'][kpi_name]['settings_agent']['model_files_names'])
 
     # Execute test
-    print('Executing %s test...' % config['kpi_name'])
     tester_module = __import__(config['kpis'][kpi_name]['settings_kpi']['tester_file'])
     tester_class = getattr(tester_module, 'Tester')
     tester = tester_class(config, opt)
-    tester.run_test()
-    end_time = str(datetime.now())
-    print('%s test finished, tasks number: %s, SCORE: %s' % (config['kpi_name'],
-                                                             str(tester.numtasks),
-                                                             str(tester.score)))
+    tester.init_agent()
+    iters = config['iterations_num']
+    for _ in range(iters):
+        print('Executing %s test...' % config['kpi_name'])
+        start_time = str(datetime.now())
+        tester.run_test(init_agent=False)
+        end_time = str(datetime.now())
+        print('%s test finished, tasks number: %s, SCORE: %s' % (config['kpi_name'],
+                                                                 str(tester.numtasks),
+                                                                 str(tester.score)))
 
-    # Log test results
-    log_str = 'testing %s :\ntasks number: %s\nstart time: %s\nend time  : %s\nscore: %s' % (kpi_name,
-                                                                                             tester.numtasks,
-                                                                                             start_time,
-                                                                                             end_time,
-                                                                                             tester.score)
-    file_path = os.path.join(config['test_logs_dir'], '%s_%s.txt' % (kpi_name, start_time))
-    os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    f = open(file_path, 'w')
-    f.write(log_str)
-    f.close()
+        # Log test results
+        log_str = 'testing %s :\ntasks number: %s\nstart time: %s\nend time  : %s\nscore: %s' % (kpi_name,
+                                                                                                 tester.numtasks,
+                                                                                                 start_time,
+                                                                                                 end_time,
+                                                                                                 tester.score)
+        file_path = os.path.join(config['test_logs_dir'], '%s_%s.txt' % (kpi_name, start_time))
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        f = open(file_path, 'w')
+        f.write(log_str)
+        f.close()
 
 
 if __name__ == '__main__':

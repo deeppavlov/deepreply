@@ -36,7 +36,7 @@ class Tester:
             '--embedding_dim', '100',
             '--dense_dim', '100']
         embeddings_dir = self.config['embeddings_dir']
-        embedding_file = self.config['kpis'][self.kpi_name]['settings_agent']['fasttext_model']
+        embedding_file = self.config['kpis'][self.kpi_name]['settings_agent']['embedding_file']
         model_files = self.opt['model_files']
         opt = bu.arg_parse(params)
         opt['model_files'] = model_files

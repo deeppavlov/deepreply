@@ -5,6 +5,7 @@ import requests
 import build_utils as bu
 from parlai.core.agents import create_agent
 
+
 class Tester:
 
     def __init__(self, config, opt):
@@ -32,7 +33,7 @@ class Tester:
             '--log-every-n-epochs', '1',
             '--log-every-n-secs', '-1',
             '--chosen-metrics', 'f1']
-        agent_settings = self.config['kpis'][self.kpi_name]['settings_agent']
+        agent_settings = self.config['kpis'][self.kpi_name]['settings_agent']['dict_files_names']
         model_files = self.opt['model_files']
         opt = bu.arg_parse(params)
         opt['model_file'] = os.path.dirname(model_files[0])
@@ -69,7 +70,7 @@ class Tester:
         for task in tasks['qas']:
             observations.append({
                 'id': task['id'],
-                #'text': task['question']
+                # Preprocess task
                 'text': task['question'].split('\t')[0]
             })
         return observations
@@ -90,9 +91,6 @@ class Tester:
         tasks = self.tasks
         tasks['answers'] = answers
         return tasks
-        # answ = {}
-        # answ['answers'] = answers
-        # return answ
 
     # Post answers data and get score
     def _get_score(self, answers):
@@ -113,11 +111,9 @@ class Tester:
         self.tasks = tasks
         self.session_id = session_id
         self.numtasks = numtasks
-        print(tasks)
 
         observations = self._make_observations(tasks)
         self.observations = observations
-        print(observations)
 
         predictions = self._get_predictions(observations)
         self.predictions = predictions
