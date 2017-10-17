@@ -36,12 +36,12 @@ class Tester:
                     '--validation-patience', '20',
                     '--datatype', 'test']
         opt = bu.arg_parse(params)
-        #opt['model_file'] = self.config['kpis'][self.kpi_name]['settings_agent']['model_dir']
-        #opt['pretrained_model'] = self.config['kpis'][self.kpi_name]['settings_agent']['model_dir']
+        embeddings_dir = self.config['embeddings_dir']
+        embedding_file = self.config['kpis'][self.kpi_name]['settings_agent']['embedding_file']
         model_files = self.opt['model_files']
         opt['model_file'] = os.path.dirname(model_files[0])
         opt['pretrained_model'] = os.path.dirname(model_files[0])
-        opt['embeddings_filename'] = self.config['kpis'][self.kpi_name]['settings_agent']['embedding_file']
+        opt['embeddings_path'] = os.path.join(embeddings_dir, embedding_file)
         print(opt)
         self.agent = create_agent(opt)
 

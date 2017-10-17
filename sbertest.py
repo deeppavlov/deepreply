@@ -15,8 +15,6 @@ def get_model_files(config):
     model_repo_url = config['kpis'][kpi_name]['settings_kpi']['model_repo_url']
     model_filename = os.path.basename(urllib.parse.urlsplit(model_repo_url).path)
     model_download_path = os.path.join(kpi_models_dir, model_filename)
-    #model_extract_dir = os.path.join(os.path.dirname(model_download_path),
-    #                                 os.path.basename(model_download_path).split('.', maxsplit=-1)[0]) + '/'
     model_extract_dir = model_download_path[:model_download_path.rfind(".tar.gz")] + '/'
 
     if update_models:

@@ -104,10 +104,6 @@ class Tester:
             answers[obs['id']] = pred['text']
         tasks = self.tasks
         tasks['answers'] = answers
-        #for paragraph in tasks['paragraphs']:
-        #    paragraph['context'] = ''
-        #    for qa in paragraph['qas']:
-        #        qa['question'] = ''
         return tasks
 
     # Post answers data and get score

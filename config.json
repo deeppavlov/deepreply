@@ -5,7 +5,7 @@
 	"embeddings_dir":"./build/",
 	"embeddings_repo_url":"!!!DUMMY",
 	"test_logs_dir":"./test_logs/",
-	"kpi_name":"kpi2",
+	"kpi_name":"kpi11",
 	"kpi_sequence":"!!!DUMMY",
 	"iterations_num":1,
 	"update_models":1,
@@ -81,7 +81,7 @@
 					"tester_file":"tester_kpi11",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/coreference/coreference_scorer_model_16.10.17.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi11/qas",
-					"test_tasks_number":5
+					"test_tasks_number":3
 				},
 			"settings_agent":
 				{
