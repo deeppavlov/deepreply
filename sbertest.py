@@ -111,7 +111,7 @@ def main():
                   '\nstart time: %s' \
                   '\nend time  : %s' \
                   '\nscore: %s' \
-                  '\n\n %s' % (kpi_name, tester.numtasks, start_time, end_time, tester.score, tester_state)
+                  '\n\n%s' % (kpi_name, tester.numtasks, start_time, end_time, tester.score, tester_state)
 
         file_path = os.path.join(config['test_logs_dir'], '%s_%s.txt' % (kpi_name, start_time))
         os.makedirs(os.path.dirname(file_path), exist_ok=True)

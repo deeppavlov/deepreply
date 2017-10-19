@@ -2,6 +2,7 @@ import os
 import json
 import requests
 import numpy as np
+import copy
 
 import build_utils as bu
 from parlai.core.agents import create_agent

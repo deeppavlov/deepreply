@@ -5,11 +5,11 @@
 	"embeddings_dir":"./build/",
 	"embeddings_repo_url":"!!!DUMMY",
 	"test_logs_dir":"./test_logs/",
-	"kpi_name":"kpi11",
+	"kpi_name":"kpi1",
 	"kpi_sequence":"!!!DUMMY",
-	"iterations_num":20,
+	"iterations_num":10,
 	"update_models":1,
-	"log_tester_state":1,
+	"log_tester_state":0,
 	"kpis":
 	{
 		"kpi1":
@@ -50,7 +50,7 @@
 					"tester_file":"tester_kpi3",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/ner/ner_dgx2.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi3/qas",
-					"test_tasks_number":5
+					"test_tasks_number":9
 				},
 			"settings_agent":
 				{
@@ -66,7 +66,7 @@
 					"tester_file":"tester_kpi4",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/squad/squad_bushkov.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi4/qas",
-					"test_tasks_number":5
+					"test_tasks_number":1
 				},
 			"settings_agent":
 				{
@@ -82,7 +82,7 @@
 					"tester_file":"tester_kpi11",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/coreference/coreference_scorer_model_16.10.17.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi11/qas",
-					"test_tasks_number":5
+					"test_tasks_number":3
 				},
 			"settings_agent":
 				{

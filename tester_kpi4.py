@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import copy
 
 import build_utils as bu
 from parlai.core.agents import create_agent
@@ -102,8 +103,14 @@ class Tester:
         observ_predict = list(zip(observations, predictions))
         for obs, pred in observ_predict:
             answers[obs['id']] = pred['text']
-        tasks = self.tasks
+        tasks = copy.deepcopy(self.tasks)
         tasks['answers'] = answers
+        # Reduce POST request size
+        #for parag in tasks['paragraphs']:
+        #    parag['context'] = ''
+        #    for qa in parag['qas']:
+        #        qa['question'] = ''
+        tasks
         return tasks
 
     # Post answers data and get score

@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import copy
 
 import build_utils as bu
 from parlai.core.agents import create_agent
@@ -33,12 +34,12 @@ class Tester:
             '--log-every-n-epochs', '1',
             '--log-every-n-secs', '-1',
             '--chosen-metrics', 'f1']
-        agent_settings = self.config['kpis'][self.kpi_name]['settings_agent']['dict_files_names']
+        dict_file = self.config['kpis'][self.kpi_name]['settings_agent']['dict_files_names']
         model_files = self.opt['model_files']
         opt = bu.arg_parse(params)
         opt['model_file'] = os.path.dirname(model_files[0])
         opt['pretrained_model'] = os.path.dirname(model_files[0])
-        opt['dict_file'] = os.path.join(os.path.dirname(model_files[0]), agent_settings['dict_files_names'])
+        opt['dict_file'] = os.path.join(os.path.dirname(model_files[0]), dict_file)
         self.agent = create_agent(opt)
 
 
@@ -88,7 +89,7 @@ class Tester:
         observ_predict = list(zip(observations, predictions))
         for obs, pred in observ_predict:
             answers[obs['id']] = pred['text']
-        tasks = self.tasks
+        tasks = copy.deepcopy(self.tasks)
         tasks['answers'] = answers
         return tasks
 

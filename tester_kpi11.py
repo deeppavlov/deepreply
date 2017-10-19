@@ -2,6 +2,7 @@ import os
 import json
 import requests
 import re
+import copy
 
 import build_utils as bu
 from parlai.core.agents import create_agent
@@ -118,7 +119,7 @@ class Tester:
         observe_predict = list(zip(observations['id'], predictions['valid_conll']))
         for obs, pred in observe_predict:
             id_predict[obs] = self._extract_coref(''.join(pred))
-        tasks = self.tasks
+        tasks = copy.deepcopy(self.tasks)
         tasks['answers'] = id_predict
         # Reduce POST request size
         tasks['qas'] = []
