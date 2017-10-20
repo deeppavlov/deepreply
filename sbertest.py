@@ -49,8 +49,8 @@ def get_modelfiles_paths(model_dir, model_files):
     modelfiles_paths = []
     # Constructing full path to each model
     for file in model_files:
-        search_tempalte = os.path.join(model_dir, '**/' + file + '*')
-        results = glob.glob(search_tempalte, recursive=True)
+        search_tempalte = os.path.join(model_dir, file + '*')
+        results = glob.glob(search_tempalte)
         if len(results) > 0:
             result = results[0]
             modelfiles_paths.append(os.path.join(os.path.dirname(result), file))

@@ -3,7 +3,7 @@
 	"models_dir":"./build/models/",
 	"embeddings_dir":"./build/",
 	"test_logs_dir":"./test_logs/",
-	"kpi_name":"kpi1",
+	"kpi_name":"kpi3",
 	"kpi_sequence":"!!!DUMMY",
 	"iterations_num":1,
 	"update_models":0,
