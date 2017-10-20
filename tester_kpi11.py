@@ -43,7 +43,10 @@ class Tester:
         opt['model_file'] = os.path.dirname(model_files[0])
         opt['pretrained_model'] = os.path.dirname(model_files[0])
         opt['embeddings_path'] = os.path.join(embeddings_dir, embedding_file)
-        print(opt)
+        if self.opt['embedding_file'] is not None:
+            opt['embeddings_path'] = self.opt['embedding_file']
+        else:
+            opt['embeddings_path'] = os.path.join(embeddings_dir, embedding_file)
         self.agent = create_agent(opt)
 
     # Update Tester config with or without [re]initiating agent

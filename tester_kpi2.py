@@ -2,7 +2,6 @@ import os
 import json
 import requests
 import numpy as np
-import copy
 
 import build_utils as bu
 from parlai.core.agents import create_agent
@@ -39,7 +38,10 @@ class Tester:
         model_files = self.opt['model_files']
         opt = bu.arg_parse(params)
         opt['model_files'] = model_files
-        opt['fasttext_model'] = os.path.join(embeddings_dir, embedding_file)
+        if self.opt['embedding_file'] is not None:
+            opt['fasttext_model'] = self.opt['embedding_file']
+        else:
+            opt['fasttext_model'] = os.path.join(embeddings_dir, embedding_file)
         self.agent = create_agent(opt)
 
     # Update Tester config with or without [re]initiating agent

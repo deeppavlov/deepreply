@@ -54,10 +54,13 @@ class Tester:
         embedding_file = self.config['kpis'][self.kpi_name]['settings_agent']['embedding_file']
         dict_file = self.config['kpis'][self.kpi_name]['settings_agent']['dict_files_names']
         model_files = self.opt['model_files']
-        opt['embedding_file'] = os.path.join(embeddings_dir, embedding_file)
         opt['model_file'] = model_files[0]
         opt['pretrained_model'] = model_files[0]
         opt['dict_file'] = os.path.join(os.path.dirname(model_files[0]), dict_file)
+        if self.opt['embedding_file'] is not None:
+            opt['embedding_file'] = self.opt['embedding_file']
+        else:
+            opt['embedding_file'] = os.path.join(embeddings_dir, embedding_file)
         self.agent = create_agent(opt)
 
     # Update Tester config with or without [re]initiating agent

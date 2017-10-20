@@ -5,6 +5,8 @@ import urllib.parse
 import urllib.request
 import tarfile
 import glob
+import sys
+import argparse
 from datetime import datetime
 
 
@@ -55,8 +57,21 @@ def get_modelfiles_paths(model_dir, model_files):
     return modelfiles_paths
 
 
-def main():
+def getopts(argv):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-k', default=None)
+    parser.add_argument('-m', default=None)
+    parser.add_argument('-e', default=None)
+    args = parser.parse_args(argv)
     opt = {}
+    opt['kpi_name'] = args.k
+    opt['model_files_dir'] = args.m
+    opt['embedding_file'] = args.e
+    return opt
+
+
+def main(argv):
+    opt = getopts(argv)
 
     # Initialise environment variables
     print('Reading environment variables...')
@@ -69,12 +84,20 @@ def main():
     with open('config.json') as config_json:
         config = json.load(config_json)
 
-    kpi_name = config['kpi_name']
     data_dir = config['data_dir']
     os.makedirs(os.path.dirname(data_dir), exist_ok=True)
 
+    # Override KPI name if provided via command line
+    if opt['kpi_name'] is not None:
+        kpi_name = opt['kpi_name']
+        config['kpi_name'] = opt['kpi_name']
+    else:
+        kpi_name = config['kpi_name']
+        opt['model_files_dir'] = None
+        opt['embedding_file'] = None
+
     # Get model files dir [and update models files]
-    model_files_dir = get_model_files(config)
+    model_files_dir = opt['model_files_dir'] if opt['model_files_dir'] is not None else get_model_files(config)
 
     # Get model files list
     opt['model_files'] = \
@@ -101,17 +124,27 @@ def main():
             tester_state = 'tasks: %s' \
                            '\nobservations: %s' \
                            '\npredictions: %s' \
-                           '\nanswers: %s' % (tester.tasks, tester.observations, tester.predictions, tester.answers)
+                           '\nanswers: %s' % (tester.tasks,
+                                              tester.observations,
+                                              tester.predictions,
+                                              tester.answers)
         else:
             tester_state = ''
 
         # Log test results
         log_str = 'testing %s :' \
+                  '\nsession id: %s' \
                   '\ntasks number: %s' \
                   '\nstart time: %s' \
                   '\nend time  : %s' \
                   '\nscore: %s' \
-                  '\n\n%s' % (kpi_name, tester.numtasks, start_time, end_time, tester.score, tester_state)
+                  '\n\n%s' % (kpi_name,
+                              tester.session_id,
+                              tester.numtasks,
+                              start_time,
+                              end_time,
+                              tester.score,
+                              tester_state)
 
         file_path = os.path.join(config['test_logs_dir'], '%s_%s.txt' % (kpi_name, start_time))
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
@@ -121,4 +154,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])
