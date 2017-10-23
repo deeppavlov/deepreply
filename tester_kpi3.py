@@ -22,6 +22,7 @@ class Tester:
         self.predictions = None
         self.answers = None
         self.score = None
+        self.response_code = None
 
     # Initiate agent
     def init_agent(self):
@@ -99,7 +100,7 @@ class Tester:
         rest_response = requests.post(self.config['kpis'][self.kpi_name]['settings_kpi']['rest_url'],
                                       json=answers,
                                       headers=post_headers)
-        return rest_response.text
+        return {'text': rest_response.text, 'status_code': rest_response.status_code}
 
     # Run full cycle of testing session and store data for each step
     def run_test(self, init_agent=True):
@@ -122,5 +123,6 @@ class Tester:
         answers = self._make_answers(observations, predictions)
         self.answers = answers
 
-        score = self._get_score(answers)
-        self.score = score
+        score_response = self._get_score(answers)
+        self.score = score_response['text']
+        self.response_code = score_response['status_code']

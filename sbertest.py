@@ -58,15 +58,22 @@ def get_modelfiles_paths(model_dir, model_files):
 
 
 def getopts(argv):
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-k', default=None)
-    parser.add_argument('-m', default=None)
-    parser.add_argument('-e', default=None)
+    parent_parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(parents=[parent_parser], conflict_handler='resolve')
+    parser.add_argument('-k', type=str, action='store', dest='k', default=None)
+    parser.add_argument('-m', type=str, action='store', dest='m', default=None)
+    parser.add_argument('-e', type=str, action='store', dest='e', default=None)
+    parser.add_argument('-i', type=int, action='store', dest='i', default=None)
+    parser.add_argument('-t', type=int, action='store', dest='t', default=None)
+    parser.add_argument('-l', action='store_true', dest='l', default=False)
     args = parser.parse_args(argv)
     opt = {}
     opt['kpi_name'] = args.k
     opt['model_files_dir'] = args.m
     opt['embedding_file'] = args.e
+    opt['iterations_num'] = args.i
+    opt['test_tasks_number'] = args.t
+    opt['log_tester_state'] = args.l
     return opt
 
 
@@ -87,14 +94,22 @@ def main(argv):
     data_dir = config['data_dir']
     os.makedirs(os.path.dirname(data_dir), exist_ok=True)
 
-    # Override KPI name if provided via command line
+    # Override config parameters if provided via command line
     if opt['kpi_name'] is not None:
         kpi_name = opt['kpi_name']
         config['kpi_name'] = opt['kpi_name']
+        if opt['test_tasks_number'] is not None:
+            config['kpis'][kpi_name]['settings_kpi']['test_tasks_number'] = opt['test_tasks_number']
     else:
         kpi_name = config['kpi_name']
         opt['model_files_dir'] = None
         opt['embedding_file'] = None
+
+    if opt['iterations_num'] is not None:
+        config['iterations_num'] = opt['iterations_num']
+
+    if opt['log_tester_state'] is not None:
+        config['log_tester_state'] = opt['log_tester_state']
 
     # Get model files dir [and update models files]
     model_files_dir = opt['model_files_dir'] if opt['model_files_dir'] is not None else get_model_files(config)
@@ -124,10 +139,12 @@ def main(argv):
             tester_state = 'tasks: %s' \
                            '\nobservations: %s' \
                            '\npredictions: %s' \
-                           '\nanswers: %s' % (tester.tasks,
-                                              tester.observations,
-                                              tester.predictions,
-                                              tester.answers)
+                           '\nanswers: %s' \
+                           '\nresponse code: %s' % (tester.tasks,
+                                                    tester.observations,
+                                                    tester.predictions,
+                                                    tester.answers,
+                                                    tester.response_code)
         else:
             tester_state = ''
 

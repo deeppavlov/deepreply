@@ -64,7 +64,7 @@
 					"tester_file":"tester_kpi4",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/squad/squad_bushkov.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi4/qas",
-					"test_tasks_number":10
+					"test_tasks_number":188
 				},
 			"settings_agent":
 				{
@@ -80,7 +80,7 @@
 					"tester_file":"tester_kpi11",
 					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/coreference/coreference_scorer_model_16.10.17.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi11/qas",
-					"test_tasks_number":3
+					"test_tasks_number":1
 				},
 			"settings_agent":
 				{
