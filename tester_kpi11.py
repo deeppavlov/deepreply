@@ -75,6 +75,26 @@ class Tester:
     # Prepare observations set
     def _make_observations(self, tasks):
         id = []
+        observs = []
+        for task in tasks['qas']:
+            conll_str = str(task['question'])
+
+            # Preprocess conll
+            doc_num = str(re.search(r'#begin document [(].+[)];\n([0-9]+)', conll_str).group(1))
+            conll_str = re.sub(r'(?P<subst>#begin document [(].+[)];)',
+                               '#begin document(%s); part 0' % doc_num,
+                               conll_str)
+            match = re.search(r'\n\n#end document', conll_str)
+            if match is None:
+                conll_str = re.sub(r'\n#end document', r'\n\n#end document', conll_str)
+
+            # Prepare task
+            observation = {'conll': [], 'valid_conll': [conll_str.split('\n')], 'id': ''}
+            id.append(task['id'])
+            observs.append(observation)
+        observations = {'id': id, 'observation': observs}
+        '''
+        id = []
         observation = {'conll': [], 'valid_conll': [], 'id': ''}
         for task in tasks['qas']:
             conll_str = str(task['question'])
@@ -92,7 +112,8 @@ class Tester:
             id.append(task['id'])
             observation['valid_conll'].append(conll_str.split('\n'))
 
-        observations = {'id': id, 'observation': observation}
+        observations = {'id': id, 'observation': observation}        
+        '''
         return observations
 
     def _extract_coref(self, conll):
@@ -113,14 +134,24 @@ class Tester:
 
     # Process observations via algorithm
     def _get_predictions(self, observations):
+        predictions = []
+        for observation in observations['observation']:
+            self.agent.observe(observation)
+            prediction = self.agent.act()
+            predictions.append(prediction['valid_conll'][0])
+        '''
         self.agent.observe(observations['observation'])
         predictions = self.agent.act()
+        '''
         return predictions
 
     # Generate answers data
     def _make_answers(self, observations, predictions):
         id_predict = {}
+        observe_predict = list(zip(observations['id'], predictions))
+        '''
         observe_predict = list(zip(observations['id'], predictions['valid_conll']))
+        '''
         for obs, pred in observe_predict:
             id_predict[obs] = self._extract_coref(''.join(pred))
         tasks = copy.deepcopy(self.tasks)
