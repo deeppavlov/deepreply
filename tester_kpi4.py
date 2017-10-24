@@ -122,6 +122,11 @@ class Tester:
             answers[obs['id']] = pred['text']
         tasks = copy.deepcopy(self.tasks)
         tasks['answers'] = answers
+        # Reduce POST request size
+        for parag in tasks['paragraphs']:
+            parag['context'] = ''
+            for qa in parag['qas']:
+                qa['question'] = ''
         return tasks
 
     # Post answers data and get score
