@@ -157,7 +157,7 @@ class Tester:
         tasks = copy.deepcopy(self.tasks)
         tasks['answers'] = id_predict
         # Reduce POST request size
-        tasks['qas'] = []
+        #tasks['qas'] = []
         return tasks
 
     # Post answers data and get score

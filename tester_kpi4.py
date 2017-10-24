@@ -122,11 +122,15 @@ class Tester:
             answers[obs['id']] = pred['text']
         tasks = copy.deepcopy(self.tasks)
         tasks['answers'] = answers
-        # Reduce POST request size
-        for parag in tasks['paragraphs']:
-            parag['context'] = ''
-            for qa in parag['qas']:
-                qa['question'] = ''
+
+        with open('./test_logs/examle_dump.json', 'w') as outfile:
+            json.dump(tasks, outfile)
+        outfile.close()
+
+        with open('./test_logs/examle_dumps.json', 'w') as outfile:
+            outfile.write(json.dumps(tasks))
+        outfile.close()
+
         return tasks
 
     # Post answers data and get score
