@@ -123,13 +123,13 @@ class Tester:
         tasks = copy.deepcopy(self.tasks)
         tasks['answers'] = answers
 
-        with open('./test_logs/examle_dump.json', 'w') as outfile:
-            json.dump(tasks, outfile)
-        outfile.close()
+        #with open('./test_logs/examle_dump.json', 'w') as outfile:
+        #    json.dump(tasks, outfile)
+        #outfile.close()
 
-        with open('./test_logs/examle_dumps.json', 'w') as outfile:
-            outfile.write(json.dumps(tasks))
-        outfile.close()
+        #with open('./test_logs/examle_dumps.json', 'w') as outfile:
+        #    outfile.write(json.dumps(tasks))
+        #outfile.close()
 
         return tasks
 
