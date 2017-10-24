@@ -3,10 +3,10 @@
 	"models_dir":"./build/models/",
 	"embeddings_dir":"./build/",
 	"test_logs_dir":"./test_logs/",
-	"kpi_name":"kpi3",
-	"kpi_sequence":"!!!DUMMY",
+	"kpi_name":"kpi1",
 	"iterations_num":1,
-	"update_models":0,
+	"update_models_from_local":1,
+	"update_models":1,
 	"log_tester_state":0,
 	"kpis":
 	{
@@ -15,7 +15,7 @@
 			"settings_kpi":
 				{
 					"tester_file":"tester_kpi1",
-					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/insults/insults_models_final_2017_10_13.tar.gz",
+					"model_repo_url":"./deepreply_models/insults.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi1/qas",
 					"test_tasks_number":789
 				},
@@ -31,7 +31,7 @@
 			"settings_kpi":
 				{
 					"tester_file":"tester_kpi2",
-					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/paraphraser/paraphraser_models_final.tar.gz",
+					"model_repo_url":"./deepreply_models/paraphraser.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi2/qas",
 					"test_tasks_number":192
 				},
@@ -46,7 +46,7 @@
 			"settings_kpi":
 				{
 					"tester_file":"tester_kpi3",
-					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/ner/ner_dgx2.tar.gz",
+					"model_repo_url":"./deepreply_models/ner.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi3/qas",
 					"test_tasks_number":9
 				},
@@ -62,9 +62,10 @@
 			"settings_kpi":
 				{
 					"tester_file":"tester_kpi4",
-					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/squad/squad_bushkov.tar.gz",
+					"model_repo_url":"./deepreply_models/squad.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi4/qas",
-					"test_tasks_number":188
+					"test_tasks_number":1889,
+					"observations_batchsize":500
 				},
 			"settings_agent":
 				{
@@ -78,9 +79,9 @@
 			"settings_kpi":
 				{
 					"tester_file":"tester_kpi11",
-					"model_repo_url":"http://share.ipavlov.mipt.ru:8080/repository/models/coreference/coreference_scorer_model_16.10.17.tar.gz",
+					"model_repo_url":"./deepreply_models/coreference.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi11/qas",
-					"test_tasks_number":1
+					"test_tasks_number":18
 				},
 			"settings_agent":
 				{

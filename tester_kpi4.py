@@ -96,9 +96,22 @@ class Tester:
                     'text': '%s\n%s' % (task['context'], question['question'])})
         return observations
 
+    # Make 2D list of observations (batch of batches)
+    def _batchfy_observations(self, observations, batch_length):
+        return [observations[i:i + batch_length] for i in range(0, len(observations), batch_length)]
+
     # Process observations via algorithm
     def _get_predictions(self, observations):
-        predictions = self.agent.batch_act(observations)
+        observations_batchsize = int(self.config['kpis'][self.kpi_name]['settings_kpi']['observations_batchsize'])
+        if observations_batchsize == 0:
+            predictions = self.agent.batch_act(observations)
+        elif observations_batchsize > 0:
+            # Split batch of observations for several batches and process observations via algorithm
+            predictions = []
+            observ_batch = self._batchfy_observations(observations, observations_batchsize)
+            for observ in observ_batch:
+                predict = self.agent.batch_act(observ)
+                predictions.extend(predict)
         return predictions
 
     # Generate answers data
@@ -109,12 +122,6 @@ class Tester:
             answers[obs['id']] = pred['text']
         tasks = copy.deepcopy(self.tasks)
         tasks['answers'] = answers
-        # Reduce POST request size
-        #for parag in tasks['paragraphs']:
-        #    parag['context'] = ''
-        #    for qa in parag['qas']:
-        #        qa['question'] = ''
-        tasks
         return tasks
 
     # Post answers data and get score

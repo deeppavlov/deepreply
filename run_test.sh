@@ -1,8 +1,8 @@
 #!/bin/sh
 export IPAVLOV_FTP="ftp://share.ipavlov.mipt.ru"
-export EMBEDDINGS_URL="http://share.ipavlov.mipt.ru:8080/repository/embeddings/"
-export MODELS_URL="http://share.ipavlov.mipt.ru:8080/repository/models/"
-export DATASETS_URL="http://share.ipavlov.mipt.ru:8080/repository/datasets/"
+export EMBEDDINGS_URL="http://lnsigo.mipt.ru/export/"
+export MODELS_URL="http://lnsigo.mipt.ru/export/"
+export DATASETS_URL="http://lnsigo.mipt.ru/export/"
 
 while getopts "k:m:e:i:t:l" option; do
 	case "${option}"

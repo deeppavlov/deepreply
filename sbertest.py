@@ -13,6 +13,7 @@ from datetime import datetime
 def get_model_files(config):
     kpi_name = config['kpi_name']
     update_models = config['update_models']
+    update_models_from_local = config['update_models_from_local']
     kpi_models_dir = os.path.join(config['models_dir'], kpi_name)
     model_repo_url = config['kpis'][kpi_name]['settings_kpi']['model_repo_url']
     model_filename = os.path.basename(urllib.parse.urlsplit(model_repo_url).path)
@@ -22,17 +23,20 @@ def get_model_files(config):
     if update_models:
         # Delete existing extracted model files
         if os.path.isdir(model_extract_dir) and model_extract_dir != '/':
-            print('Deliting existing extracted model files...')
+            print('Deleting existing extracted model files...')
             shutil.rmtree(model_extract_dir, ignore_errors=True)
             print('Done')
 
         # Download model files
         print('Downloading model to ' + model_download_path + ' ...')
         os.makedirs(os.path.dirname(model_extract_dir), exist_ok=True)
-        req = urllib.request.urlopen(model_repo_url)
-        with open(model_download_path, 'w+b') as f:
-            f.write(req.read())
-            f.close()
+        if update_models_from_local:
+            shutil.copy(model_repo_url, model_download_path)
+        else:
+            req = urllib.request.urlopen(model_repo_url)
+            with open(model_download_path, 'w+b') as f:
+                f.write(req.read())
+                f.close()
         print('Done')
 
         # Extract model files
@@ -41,6 +45,12 @@ def get_model_files(config):
         tar.extractall(path=model_extract_dir)
         tar.close()
         print('Done')
+
+        # Delete downloaded model files
+        if os.path.isfile(model_download_path) and model_download_path != '/':
+            print('Deleting downloaded model files...')
+            os.remove(model_download_path)
+            print('Done')
 
     return model_extract_dir
 
