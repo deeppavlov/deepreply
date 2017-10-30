@@ -79,9 +79,11 @@ class Tester:
 
     # Process observations via algorithm
     def _get_predictions(self, observations):
-        raw_predicts = self.agent.batch_act(observations)
-        predictions = [{'id': pred['id'], 'text': pred['text'].replace('__NULL__', '').strip()}
-                       for pred in raw_predicts]
+        # Using agent.batch_act via feeding model 1 by 1 observation from batch
+        predictions = []
+        for observation in observations:
+            prediction = self.agent.batch_act([observation])
+            predictions.append({'id': prediction[0]['id'],'text': prediction[0]['text']})
         return predictions
 
     # Generate answers data
