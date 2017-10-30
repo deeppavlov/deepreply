@@ -80,8 +80,9 @@ class Tester:
     # Process observations via algorithm
     def _get_predictions(self, observations):
         raw_predicts = self.agent.batch_act(observations)
-        predictions = [{'id': pred['id'], 'text': pred['text'].replace('__NULL__', '').strip()}
-                       for pred in raw_predicts]
+        # Take only N first tags corresponding to number of tokens given in request len(observ['text'].split())
+        predictions = [{'id': pred['id'], 'text': ' '.join(pred['text'].split()[:len(observ['text'].split())])}
+                       for observ, pred in zip(observations, raw_predicts)]
         return predictions
 
     # Generate answers data

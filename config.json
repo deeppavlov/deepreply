@@ -3,11 +3,11 @@
 	"models_dir":"./build/models/",
 	"embeddings_dir":"./build/",
 	"test_logs_dir":"./test_logs/",
-	"kpi_name":"kpi1",
+	"kpi_name":"kpi3",
 	"iterations_num":1,
 	"update_models_from_local":1,
 	"update_models":1,
-	"log_tester_state":0,
+	"log_tester_state":1,
 	"kpis":
 	{
 		"kpi1":
@@ -37,7 +37,7 @@
 				},
 			"settings_agent":
 				{
-					"model_files_names":["maxpool_match_0", "maxpool_match_1", "maxpool_match_2", "maxpool_match_3", "maxpool_match_4"],
+					"model_files_names":["paraphraser_0", "paraphraser_1", "paraphraser_2", "paraphraser_3", "paraphraser_4"],
 					"embedding_file":"ft_0.8.3_nltk_yalen_sg_300.bin"
 				}
 		},
@@ -53,7 +53,7 @@
 			"settings_agent":
 				{
 					"model_files_names":["model.ckpt"],
-					"dict_files_names":"ner.dict"
+					"dict_files_names":"dict"
 				},
 			"settings_agent_comment":"dict_files_names param should always point to .dict file"
 		},
