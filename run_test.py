@@ -29,9 +29,11 @@ def get_model_files(config):
     """Download model files and return path of download directory
 
     Args:
-        config -- dict object initialised with config.json
+        :param config: dict object initialised with config.json
+        :type config: dict
     Returns:
-        path of directory where model files defined in config located
+        :return: path of directory where model files defined in config located
+        :rtype: str
     If specified in config, function downloads model files from local o remote repository
     and returns path of download directory. If not, model returns path of directory,
     where files, defined in config, where downloaded heretofore.
@@ -84,10 +86,13 @@ def get_modelfiles_paths(model_dir, model_files):
     """Returns list of paths of model files
 
     Args:
-        model_dir -- path of model files download/store directory
-        model_files -- list of model files names (full names or beginning masks)
+        :param model_dir: path of model files download/store directory
+        :type model_dir: str
+        :param model_files: list of model files names (full names or beginning masks)
+        :type model_files:
     Returns:
-        path list of paths of model files
+        :return: path list of paths of model files
+        :rtype: string
     Function executes recursive search in all model_dir subdirs
     """
     # Get list of model dir path and all recursive subdirs
@@ -113,9 +118,11 @@ def getopts(argv):
     """Returns dict with parsed command lines arguments with values
 
     Args:
-        argv -- set of raw command line arguments
+        :param argv: set of raw command line arguments
+        :type argv: list
     Returns:
-        Dict with parsed command lines arguments and their [default] values
+        :return: Dict with parsed command lines arguments and their [default] values
+        :rtype: dict
     """
     parent_parser = argparse.ArgumentParser()
     parser = argparse.ArgumentParser(parents=[parent_parser], conflict_handler='resolve')
@@ -139,7 +146,8 @@ def main(argv):
     """Downloads model files and/or executes KPI test[s]
 
     Args:
-        argv -- set of raw command line arguments
+        :param argv: set of raw command line arguments
+        :type argv: list
     Method initialises config dict, downloads model files (if specified in config), initialises model agent
     and runs specified in config or command line number of testing iterations
     """
@@ -207,11 +215,16 @@ def log_tester(tester, config, start_time, end_time, log_tester_state):
     """Log tester object state and test results after one KPI test iteration
 
     Args:
-        tester -- tester object with tasks, observations, predictions, answers and test score
-        config -- dict object initialised with config.json
-        start_time -- formatted string with the start time of KPI test iteration
-        end_time -- formatted string with the end time of KPI test iteration
-        log_tester_state -- integer flag (0, 1), turns off/on extended tester object state logging
+        :param tester: Tester object for KPI under test with tasks, observations, predictions, answers and test score
+        :type tester: Tester
+        :param config: dict object initialised with config.json
+        :type config: dict
+        :param start_time: formatted string with the start time of KPI test iteration
+        :type start_time: str
+        :param end_time: formatted string with the end time of KPI test iteration
+        :type end_time: str
+        :param log_tester_state: integer flag (0, 1), turns off/on extended tester object state logging
+        :type log_tester_state: int
     Method saves log file after each KPI test iteration into path, specified in config['test_logs_dir']
     """
     # Form string with tester object state
