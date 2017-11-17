@@ -1,7 +1,17 @@
-"""
+# Copyright 2017 Neural Networks and Deep Learning lab, MIPT
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-
-"""
 
 import os
 import shutil
@@ -16,6 +26,16 @@ from datetime import datetime
 
 
 def get_model_files(config):
+    """Download model files and return path of download directory
+
+    Args:
+        config -- dict object initialised with config.json
+    Returns:
+        path of directory where model files defined in config located
+    If specified in config, function downloads model files from local o remote repository
+    and returns path of download directory. If not, model returns path of directory,
+    where files, defined in config, where downloaded heretofore.
+    """
     kpi_name = config['kpi_name']
     update_models = config['update_models']
     update_models_from_local = config['update_models_from_local']
@@ -61,18 +81,42 @@ def get_model_files(config):
 
 
 def get_modelfiles_paths(model_dir, model_files):
+    """Returns list of paths of model files
+
+    Args:
+        model_dir -- path of model files download/store directory
+        model_files -- list of model files names (full names or beginning masks)
+    Returns:
+        path list of paths of model files
+    Function executes recursive search in all model_dir subdirs
+    """
+    # Get list of model dir path and all recursive subdirs
+    model_dirs_recursive = [model_dir]
+    dirs_recursive = os.walk(model_dir)
+    for directory in dirs_recursive:
+        for subdir in directory[1]:
+            model_dirs_recursive.append(os.path.join(directory[0], subdir))
+
+    # Get all model files paths from model dir and subdirs
     modelfiles_paths = []
-    # Constructing full path to each model
-    for file in model_files:
-        search_tempalte = os.path.join(model_dir, file + '*')
-        results = glob.glob(search_tempalte)
-        if len(results) > 0:
-            result = results[0]
-            modelfiles_paths.append(os.path.join(os.path.dirname(result), file))
+    for directory in model_dirs_recursive:
+        for file in model_files:
+            search_tempalte = os.path.join(directory, file + '*')
+            results = glob.glob(search_tempalte)
+            if len(results) > 0:
+                result = results[0]
+                modelfiles_paths.append(os.path.join(os.path.dirname(result), file))
     return modelfiles_paths
 
 
 def getopts(argv):
+    """Returns dict with parsed command lines arguments with values
+
+    Args:
+        argv -- set of raw command line arguments
+    Returns:
+        Dict with parsed command lines arguments and their [default] values
+    """
     parent_parser = argparse.ArgumentParser()
     parser = argparse.ArgumentParser(parents=[parent_parser], conflict_handler='resolve')
     parser.add_argument('-k', type=str, action='store', dest='k', default=None)
@@ -82,17 +126,23 @@ def getopts(argv):
     parser.add_argument('-t', type=int, action='store', dest='t', default=None)
     parser.add_argument('-l', action='store_true', dest='l', default=False)
     args = parser.parse_args(argv)
-    opt = {}
-    opt['kpi_name'] = args.k
-    opt['model_files_dir'] = args.m
-    opt['embedding_file'] = args.e
-    opt['iterations_num'] = args.i
-    opt['test_tasks_number'] = args.t
-    opt['log_tester_state'] = args.l
+    opt = {'kpi_name': args.k,
+           'model_files_dir': args.m,
+           'embedding_file': args.e,
+           'iterations_num': args.i,
+           'test_tasks_number': args.t,
+           'log_tester_state': args.l}
     return opt
 
 
 def main(argv):
+    """Downloads model files and/or executes KPI test[s]
+
+    Args:
+        argv -- set of raw command line arguments
+    Method initialises config dict, downloads model files (if specified in config), initialises model agent
+    and runs specified in config or command line number of testing iterations
+    """
     opt = getopts(argv)
 
     # Initialise environment variables
@@ -154,6 +204,16 @@ def main(argv):
 
 
 def log_tester(tester, config, start_time, end_time, log_tester_state):
+    """Log tester object state and test results after one KPI test iteration
+
+    Args:
+        tester -- tester object with tasks, observations, predictions, answers and test score
+        config -- dict object initialised with config.json
+        start_time -- formatted string with the start time of KPI test iteration
+        end_time -- formatted string with the end time of KPI test iteration
+        log_tester_state -- integer flag (0, 1), turns off/on extended tester object state logging
+    Method saves log file after each KPI test iteration into path, specified in config['test_logs_dir']
+    """
     # Form string with tester object state
     if log_tester_state:
         tester_state = 'tasks: %s' \
