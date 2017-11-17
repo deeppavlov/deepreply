@@ -33,7 +33,7 @@
 					"tester_file":"tester_kpi2",
 					"model_repo_url":"./deepreply_models/paraphraser.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi2/qas",
-					"test_tasks_number":192
+					"test_tasks_number":1923
 				},
 			"settings_agent":
 				{
@@ -86,7 +86,6 @@
 			"settings_agent":
 				{
 					"model_files_names":["model.index"],
-					"model_dir":"./build/models/kpi11/",
 					"embedding_file":"ft_0.8.3_nltk_yalen_sg_300.bin"
 				}
 		}

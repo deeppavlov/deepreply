@@ -31,7 +31,6 @@ class Tester:
                     '--datatype', 'test',
                     '--batchsize', '256',
                     '--display-examples', 'False',
-                    #'--fasttext_embeddings_dict', './build/paraphraser/paraphraser.emb',
                     '--bagging-folds-number', '5',
                     '--chosen-metrics', 'f1']
         embeddings_dir = self.config['embeddings_dir']
@@ -124,4 +123,3 @@ class Tester:
         score_response = self._get_score(answers)
         self.score = score_response['text']
         self.response_code = score_response['status_code']
-

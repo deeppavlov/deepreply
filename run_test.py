@@ -1,3 +1,8 @@
+"""
+
+
+"""
+
 import os
 import shutil
 import json
@@ -145,39 +150,44 @@ def main(argv):
                                                                  str(tester.score)))
 
         # Log tester object state
-        if log_tester_state:
-            tester_state = 'tasks: %s' \
-                           '\nobservations: %s' \
-                           '\npredictions: %s' \
-                           '\nanswers: %s' \
-                           '\nresponse code: %s' % (tester.tasks,
-                                                    tester.observations,
-                                                    tester.predictions,
-                                                    tester.answers,
-                                                    tester.response_code)
-        else:
-            tester_state = ''
+        log_tester(tester, config, start_time, end_time, log_tester_state)
 
-        # Log test results
-        log_str = 'testing %s :' \
-                  '\nsession id: %s' \
-                  '\ntasks number: %s' \
-                  '\nstart time: %s' \
-                  '\nend time  : %s' \
-                  '\nscore: %s' \
-                  '\n\n%s' % (kpi_name,
-                              tester.session_id,
-                              tester.numtasks,
-                              start_time,
-                              end_time,
-                              tester.score,
-                              tester_state)
 
-        file_path = os.path.join(config['test_logs_dir'], '%s_%s.txt' % (kpi_name, start_time))
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        f = open(file_path, 'w')
-        f.write(log_str)
-        f.close()
+def log_tester(tester, config, start_time, end_time, log_tester_state):
+    # Form string with tester object state
+    if log_tester_state:
+        tester_state = 'tasks: %s' \
+                       '\nobservations: %s' \
+                       '\npredictions: %s' \
+                       '\nanswers: %s' \
+                       '\nresponse code: %s' % (tester.tasks,
+                                                tester.observations,
+                                                tester.predictions,
+                                                tester.answers,
+                                                tester.response_code)
+    else:
+        tester_state = ''
+
+    # Log test results
+    log_str = 'testing %s :' \
+              '\nsession id: %s' \
+              '\ntasks number: %s' \
+              '\nstart time: %s' \
+              '\nend time  : %s' \
+              '\nscore: %s' \
+              '\n\n%s' % (config['kpi_name'],
+                          tester.session_id,
+                          tester.numtasks,
+                          start_time,
+                          end_time,
+                          tester.score,
+                          tester_state)
+
+    file_path = os.path.join(config['test_logs_dir'], '%s_%s.txt' % (config['kpi_name'], start_time))
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    f = open(file_path, 'w')
+    f.write(log_str)
+    f.close()
 
 
 if __name__ == '__main__':

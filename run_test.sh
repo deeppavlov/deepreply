@@ -16,4 +16,4 @@ while getopts "k:m:e:i:t:l" option; do
 	esac
 done
 
-python3 sbertest.py $KPI_NAME $MODEL_FOLDER $EMBEDDING_FILE $ITER_NUM $TASKS_NUMBER $LOG_STATE
+python3 run_test.py $KPI_NAME $MODEL_FOLDER $EMBEDDING_FILE $ITER_NUM $TASKS_NUMBER $LOG_STATE
