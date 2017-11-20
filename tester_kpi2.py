@@ -23,7 +23,7 @@ from parlai.core.agents import create_agent
 
 
 class Tester:
-    """Insults agent with KPI2 testing methods and data
+    """Paraphraser agent with KPI2 testing methods and data
 
     Properties:
         agent: KPI's model agent object
