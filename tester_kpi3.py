@@ -67,19 +67,6 @@ class Tester:
         self.answers = None
         self.score = None
         self.response_code = None
-        self.agent = None
-        self.config = config
-        self.opt = opt
-        self.kpi_name = config['kpi_name']
-        self.session_id = None
-        self.numtasks = None
-        self.tasks = None
-        self.observations = None
-        self.agent_params = None
-        self.predictions = None
-        self.answers = None
-        self.score = None
-        self.response_code = None
 
     def init_agent(self):
         """Initiate model agent
