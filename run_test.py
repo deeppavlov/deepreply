@@ -263,5 +263,63 @@ def log_tester(tester, config, start_time, end_time, log_tester_state):
     f.close()
 
 
+def init_all_models():
+    """Returns dict with initiated Tester objects for all KPIs
+
+    Returns:
+        :return: Dict with initiated Tester objects for all KPIs
+        :rtype: dict
+    """
+
+
+
+
+    kpi_models = {}
+    opt = {}
+    opt['model_files_dir'] = None
+    opt['embedding_file'] = None
+
+    # Initialise environment variables
+    print('Reading environment variables...')
+    opt['models_repo_url'] = os.getenv('MODELS_URL')
+    opt['embeddings_repo_url'] = os.getenv('EMBEDDINGS_URL')
+    opt['datasets_repo_url'] = os.getenv('DATASETS_URL')
+
+    # Read config.json
+    print('Reading config.json...')
+    with open('config.json') as config_json:
+        config = json.load(config_json)
+
+    data_dir = config['data_dir']
+    os.makedirs(os.path.dirname(data_dir), exist_ok=True)
+
+    # Initialising sequence for the each KPI Tester object
+    kpi_names = config['kpi_names']
+    # kpi_names = ["kpi11"]
+    for kpi_name in kpi_names:
+        config['kpi_name'] = kpi_name
+
+        # Get model files dir [and update model files]
+        model_files_dir = get_model_files(config)
+
+        # Get model files list
+        opt['model_files'] = \
+            get_modelfiles_paths(model_files_dir, config['kpis'][kpi_name]['settings_agent']['model_files_names'])
+
+        # Execute test
+        tester_module = __import__(config['kpis'][kpi_name]['settings_kpi']['tester_file'])
+        tester_class = getattr(tester_module, 'Tester')
+        tester = tester_class(config, opt)
+        tester.init_agent()
+        kpi_models[kpi_name] = tester
+
+    return kpi_models
+
+
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    # main(sys.argv[1:])
+    testers = init_all_models()
+    kpi = testers['kpi2']
+    with kpi.graph.as_default():
+        kpi.run_test(init_agent=False)
+    print(kpi.score)

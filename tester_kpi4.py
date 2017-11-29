@@ -107,7 +107,16 @@ class Tester:
             opt['embedding_file'] = self.opt['embedding_file']
         else:
             opt['embedding_file'] = os.path.join(embeddings_dir, embedding_file)
-        self.agent = create_agent(opt)
+
+        import tensorflow as tf
+        from keras.backend.tensorflow_backend import set_session
+        self.graph = tf.Graph()
+        with self.graph.as_default():
+            cfg = tf.ConfigProto()
+            cfg.gpu_options.per_process_gpu_memory_fraction = 0.95
+            cfg.gpu_options.visible_device_list = '0'
+            set_session(tf.Session(config=cfg))
+            self.agent = create_agent(opt)
 
     def update_config(self, config, init_agent=False):
         """Update Tester instance configuration dict

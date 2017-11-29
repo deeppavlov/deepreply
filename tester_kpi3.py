@@ -86,7 +86,10 @@ class Tester:
         opt['model_file'] = os.path.dirname(model_files[0])
         opt['pretrained_model'] = os.path.dirname(model_files[0])
         opt['dict_file'] = os.path.join(os.path.dirname(model_files[0]), dict_file)
-        self.agent = create_agent(opt)
+
+        import tensorflow as tf
+        with tf.Graph().as_default():
+            self.agent = create_agent(opt)
 
 
     def update_config(self, config, init_agent=False):

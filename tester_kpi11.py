@@ -93,7 +93,10 @@ class Tester:
             opt['embeddings_path'] = self.opt['embedding_file']
         else:
             opt['embeddings_path'] = os.path.join(embeddings_dir, embedding_file)
-        self.agent = create_agent(opt)
+
+        import tensorflow as tf
+        with tf.Graph().as_default():
+            self.agent = create_agent(opt)
 
     def update_config(self, config, init_agent=False):
         """Update Tester instance configuration dict
