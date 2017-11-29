@@ -24,6 +24,8 @@ import sys
 import argparse
 from datetime import datetime
 
+from multiprocessing import Process, Queue
+
 
 def get_model_files(config):
     """Download model files and return path of download directory
@@ -296,6 +298,7 @@ def init_all_models():
     # Initialising sequence for the each KPI Tester object
     kpi_names = config['kpi_names']
     # kpi_names = ["kpi11"]
+
     for kpi_name in kpi_names:
         config['kpi_name'] = kpi_name
 
@@ -309,9 +312,11 @@ def init_all_models():
         # Execute test
         tester_module = __import__(config['kpis'][kpi_name]['settings_kpi']['tester_file'])
         tester_class = getattr(tester_module, 'Tester')
-        tester = tester_class(config, opt)
-        tester.init_agent()
-        kpi_models[kpi_name] = tester
+        in_q = Queue()
+        out_q = Queue()
+        tester = tester_class(config, opt, in_q, out_q)
+        tester.start()
+        kpi_models[kpi_name] = (tester, in_q, out_q)
 
     return kpi_models
 
@@ -319,7 +324,37 @@ def init_all_models():
 if __name__ == '__main__':
     # main(sys.argv[1:])
     testers = init_all_models()
-    kpi = testers['kpi2']
-    with kpi.graph.as_default():
-        kpi.run_test(init_agent=False)
-    print(kpi.score)
+    # (kpi, q) = testers['kpi1']
+    # q.put('Test kpi-1 1')
+    # q.put('Test kpi-1 2')
+
+
+    (kpi, in_q, out_q) = testers['kpi1']
+    in_q.put('Test kpi-1 1')
+    print(out_q.get())
+    in_q.put('Test kpi-1 2')
+    print(out_q.get())
+
+    (kpi, in_q, out_q) = testers['kpi2']
+    in_q.put('Test kpi-2 1')
+    print(out_q.get())
+    in_q.put('Test kpi-2 2')
+    print(out_q.get())
+
+    (kpi, in_q, out_q) = testers['kpi3']
+    in_q.put('Test kpi-3 1')
+    print(out_q.get())
+    in_q.put('Test kpi-3 2')
+    print(out_q.get())
+
+    (kpi, in_q, out_q) = testers['kpi4']
+    in_q.put('Test kpi-4 1')
+    print(out_q.get())
+    in_q.put('Test kpi-4 2')
+    print(out_q.get())
+
+    (kpi, in_q, out_q) = testers['kpi11']
+    in_q.put('Test kpi-11 1')
+    print(out_q.get())
+    in_q.put('Test kpi-11 2')
+    print(out_q.get())

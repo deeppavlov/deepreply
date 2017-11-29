@@ -21,8 +21,9 @@ import copy
 import build_utils as bu
 from parlai.core.agents import create_agent
 
+from multiprocessing import Process, Queue
 
-class Tester:
+class Tester(Process):
     """NER agent with KPI3 testing methods and data
 
     Properties:
@@ -46,7 +47,7 @@ class Tester:
         run_test(self, init_agent=True): evokes full cycle of KPI testing sequence with current config and tasks number
     """
 
-    def __init__(self, config, opt):
+    def __init__(self, config, opt, input_queue, output_queue):
         """Tester class constructor
 
         :param config: dict object initialised with config.json and modified with run script
@@ -54,9 +55,13 @@ class Tester:
         :param opt: dict object with optional agent and KPI testing parameters
         :type opt: dict
         """
+        super(Tester, self).__init__()
+        self.input_queue = input_queue
+        self.output_queue = output_queue
+
         self.agent = None
-        self.config = config
-        self.opt = opt
+        self.config = copy.deepcopy(config)
+        self.opt = copy.deepcopy(opt)
         self.kpi_name = config['kpi_name']
         self.session_id = None
         self.numtasks = None
@@ -87,9 +92,7 @@ class Tester:
         opt['pretrained_model'] = os.path.dirname(model_files[0])
         opt['dict_file'] = os.path.join(os.path.dirname(model_files[0]), dict_file)
 
-        import tensorflow as tf
-        with tf.Graph().as_default():
-            self.agent = create_agent(opt)
+        self.agent = create_agent(opt)
 
 
     def update_config(self, config, init_agent=False):
@@ -214,7 +217,7 @@ class Tester:
             :param init_agent: bool flag, turns on/off agent [re]initialising before testing sequence
             :type init_agent: bool
         """
-        if init_agent:
+        if init_agent or self.agent is None:
             self.init_agent()
 
         tasks = self._get_tasks()
@@ -236,3 +239,11 @@ class Tester:
         score_response = self._get_score(answers)
         self.score = score_response['text']
         self.response_code = score_response['status_code']
+
+    def run(self):
+        while True:
+            msg = self.input_queue.get()
+            print(msg)
+            self.run_test(init_agent=False)
+            print("score %s" % self.score)
+            self.output_queue.put(self.score)
