@@ -34,7 +34,7 @@ def answer():
         type: string
     """
     kpi_name = request.args.get('kpi_name')
-    if kpi_name not in ["kpi1", 'kpi2', "kpi3", "kpi4"]:
+    if kpi_name not in ["kpi1", 'kpi2', "kpi3", "kpi4", "kpi11"]:
         return jsonify({
             'error': 'kpi_name must be one of: kpi1, kpi2, kpi3, kpi4, kpi11'
         }), 500
