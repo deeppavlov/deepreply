@@ -322,39 +322,4 @@ def init_all_models():
 
 
 if __name__ == '__main__':
-    # main(sys.argv[1:])
-    testers = init_all_models()
-    # (kpi, q) = testers['kpi1']
-    # q.put('Test kpi-1 1')
-    # q.put('Test kpi-1 2')
-
-
-    (kpi, in_q, out_q) = testers['kpi1']
-    in_q.put('Test kpi-1 1')
-    print(out_q.get())
-    in_q.put('Test kpi-1 2')
-    print(out_q.get())
-
-    (kpi, in_q, out_q) = testers['kpi2']
-    in_q.put('Test kpi-2 1')
-    print(out_q.get())
-    in_q.put('Test kpi-2 2')
-    print(out_q.get())
-
-    (kpi, in_q, out_q) = testers['kpi3']
-    in_q.put('Test kpi-3 1')
-    print(out_q.get())
-    in_q.put('Test kpi-3 2')
-    print(out_q.get())
-
-    (kpi, in_q, out_q) = testers['kpi4']
-    in_q.put('Test kpi-4 1')
-    print(out_q.get())
-    in_q.put('Test kpi-4 2')
-    print(out_q.get())
-
-    (kpi, in_q, out_q) = testers['kpi11']
-    in_q.put('Test kpi-11 1')
-    print(out_q.get())
-    in_q.put('Test kpi-11 2')
-    print(out_q.get())
+    main(sys.argv[1:])

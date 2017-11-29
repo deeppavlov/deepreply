@@ -4,12 +4,14 @@ from flasgger import Swagger
 
 import os
 
-from run_test import main as run_kpi
+import run_test
 
 
 app = Flask(__name__)
 Swagger(app)
 
+
+models = run_test.init_all_models()
 
 @app.route('/')
 def index():
@@ -19,7 +21,7 @@ def index():
 @app.route('/run_kpi', methods=['GET'])
 def answer():
     """
-    Run model for specified KPI on specified tusks number
+    Run model for specified KPI on specified tasks number
     ---
     parameters:
       - name: kpi_name
@@ -32,18 +34,30 @@ def answer():
         type: string
     """
     kpi_name = request.args.get('kpi_name')
+    if kpi_name not in ["kpi1", 'kpi2', "kpi3", "kpi4"]:
+        return jsonify({
+            'error': 'kpi_name must be one of: kpi1, kpi2, kpi3, kpi4, kpi11'
+        }), 500
+
     tasks_number = request.args.get('tasks_number')
 
-    run_kpi(['-k', kpi_name, '-t', tasks_number])
+    if not tasks_number.isdigit() or int(tasks_number) <= 0:
+        return jsonify({
+            'error': 'tasks_number must be an integer, greater then zero'
+        }), 500
+
+    (model, in_q, out_q) = models[kpi_name]
+    in_q.put(tasks_number)
+    score = out_q.get()
 
     result = {
         'kpi_name': kpi_name,
         'tasks_number': tasks_number,
-        'result': 'ok'
+        'score': score
     }
 
     return jsonify(result), 200
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=80, debug=True)

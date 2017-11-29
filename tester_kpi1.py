@@ -56,7 +56,6 @@ class Tester(Process):
         :param opt: dict object with optional agent and KPI testing parameters
         :type opt: dict
         """
-        #threading.Thread.__init__(self)
         super(Tester, self).__init__()
         self.input_queue = input_queue
         self.output_queue = output_queue
@@ -245,8 +244,9 @@ class Tester(Process):
 
     def run(self):
         while True:
-            msg = self.input_queue.get()
-            print(msg)
+            tasks_numer = self.input_queue.get()
+            print("Run %s on %s tasks" % (self.kpi_name, tasks_numer))
+            self.set_numtasks(tasks_numer)
             self.run_test(init_agent=False)
-            print("score %s" % self.score)
+            print("% score  %s" % (self.kpi_name, self.score))
             self.output_queue.put(self.score)
