@@ -1,17 +1,20 @@
-from flask import Flask, request, jsonify, redirect, url_for
+from flask import Flask, request, jsonify, redirect
 from flasgger import Swagger
 
-
-import os
-
-import run_test
-
+from run_test import init_all_models
 
 app = Flask(__name__)
 Swagger(app)
 
+models = None
 
-models = run_test.init_all_models()
+
+@app.before_first_request
+def __init_models():
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    global models
+    models = init_all_models()
+    print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
 
 @app.route('/')
 def index():
@@ -48,16 +51,10 @@ def answer():
 
     (model, in_q, out_q) = models[kpi_name]
     in_q.put(tasks_number)
-    score = out_q.get()
-
-    result = {
-        'kpi_name': kpi_name,
-        'tasks_number': tasks_number,
-        'score': score
-    }
+    result = out_q.get()
 
     return jsonify(result), 200
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
