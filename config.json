@@ -4,7 +4,7 @@
 	"embeddings_dir":"/data/",
 	"test_logs_dir":"./test_logs/",
 	"kpi_name":"kpi1",
-	"kpi_names":["kpi1", "kpi2", "kpi3", "kpi4", "kpi11"],
+	"kpi_names":["kpi1", "kpi2", "kpi3", "kpi4"],
 	"iterations_num":1,
 	"update_models_from_local":1,
 	"update_models":1,
