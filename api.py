@@ -8,12 +8,6 @@ Swagger(app)
 
 models = None
 
-
-@app.before_first_request
-def __init_models():
-    global models
-    models = init_all_models()
-
 @app.route('/')
 def index():
     return redirect('/apidocs/')
@@ -55,4 +49,5 @@ def answer():
 
 
 if __name__ == "__main__":
+    models = init_all_models()
     app.run(host='0.0.0.0', port=80, debug=False)
