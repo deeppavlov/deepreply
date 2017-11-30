@@ -195,7 +195,7 @@ def main(argv):
 
     # Execute test
     tester_module = __import__(config['kpis'][kpi_name]['settings_kpi']['tester_file'])
-    tester_class = getattr(tester_module, 'Tester')
+    tester_class = getattr(tester_module, config['kpis'][kpi_name]['settings_kpi']['tester_class'])
     in_q = Queue()
     out_q = Queue()
     tester = tester_class(config, opt, in_q, out_q)
@@ -310,7 +310,7 @@ def init_all_models():
 
         # Execute test
         tester_module = __import__(config['kpis'][kpi_name]['settings_kpi']['tester_file'])
-        tester_class = getattr(tester_module, 'Tester')
+        tester_class = getattr(tester_module, config['kpis'][kpi_name]['settings_kpi']['tester_class'])
         in_q = Queue()
         out_q = Queue()
         tester = tester_class(config, opt, in_q, out_q)

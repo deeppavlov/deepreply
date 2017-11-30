@@ -21,7 +21,7 @@ from parlai.core.agents import create_agent
 from tester_base import TesterBase
 
 
-class Tester(TesterBase):
+class TesterKpi2(TesterBase):
     """Implements methods of TesterBase for testing KPI2 with Paraphraser agent
 
     Public methods:
@@ -42,7 +42,7 @@ class Tester(TesterBase):
             :type opt: multiprocessing.Queue
         All params a needed to init base class (TesterBase) instance
         """
-        super(Tester, self).__init__(config, opt, input_queue, output_queue)
+        super(Testerkpi2, self).__init__(config, opt, input_queue, output_queue)
 
     def init_agent(self):
         """Initiate model agent
