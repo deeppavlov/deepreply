@@ -22,7 +22,7 @@ from tester_base import TesterBase
 
 
 class Tester(TesterBase):
-    """Implements methods of TesterBase for testing KPI1 with Insults agent
+    """Implements methods of TesterBase for testing KPI4 with SQUAD agent
 
     Public methods:
         init_agent(self): initiates model agent
