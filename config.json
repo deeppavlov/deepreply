@@ -1,10 +1,10 @@
 {
 	"data_dir":"./build/",
 	"models_dir":"./build/models/",
-	"embeddings_dir":"./build/",
+	"embeddings_dir":"/data/",
 	"test_logs_dir":"./test_logs/",
 	"kpi_name":"kpi1",
-	"kpi_names":["kpi1", "kpi2", "kpi4"],
+	"kpi_names":["kpi1", "kpi2", "kpi3", "kpi4", "kpi11"],
 	"iterations_num":1,
 	"update_models_from_local":1,
 	"update_models":1,
@@ -16,7 +16,7 @@
 			"settings_kpi":
 				{
 					"tester_file":"tester_kpi1",
-					"model_repo_url":"./deepreply_models/insults.tar.gz",
+					"model_repo_url":"/data/insults.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi1/qas",
 					"test_tasks_number":789
 				},
@@ -32,7 +32,7 @@
 			"settings_kpi":
 				{
 					"tester_file":"tester_kpi2",
-					"model_repo_url":"./deepreply_models/paraphraser.tar.gz",
+					"model_repo_url":"/data/paraphraser.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi2/qas",
 					"test_tasks_number":1923
 				},
@@ -47,7 +47,7 @@
 			"settings_kpi":
 				{
 					"tester_file":"tester_kpi3",
-					"model_repo_url":"./deepreply_models/ner.tar.gz",
+					"model_repo_url":"/data/ner.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi3/qas",
 					"test_tasks_number":9
 				},
@@ -63,7 +63,7 @@
 			"settings_kpi":
 				{
 					"tester_file":"tester_kpi4",
-					"model_repo_url":"./deepreply_models/squad.tar.gz",
+					"model_repo_url":"/data/squad.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi4/qas",
 					"test_tasks_number":1889,
 					"observations_batchsize":500
@@ -80,7 +80,7 @@
 			"settings_kpi":
 				{
 					"tester_file":"tester_kpi11",
-					"model_repo_url":"./deepreply_models/coreference.tar.gz",
+					"model_repo_url":"/data/coreference.tar.gz",
 					"rest_url":"http://api.aibotbench.com/kpi11/qas",
 					"test_tasks_number":18
 				},

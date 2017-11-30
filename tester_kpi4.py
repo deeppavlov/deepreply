@@ -281,8 +281,9 @@ class Tester(Process):
 
     def run(self):
         while True:
-            msg = self.input_queue.get()
-            print(msg)
+            tasks_numer = self.input_queue.get()
+            print("Run %s on %s tasks" % (self.kpi_name, tasks_numer))
+            self.set_numtasks(tasks_numer)
             self.run_test(init_agent=False)
-            print("score %s" % self.score)
+            print("% score  %s" % (self.kpi_name, self.score))
             self.output_queue.put(self.score)
