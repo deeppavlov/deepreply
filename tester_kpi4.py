@@ -88,7 +88,7 @@ class TesterKpi4(TesterBase):
 
         self.agent = create_agent(opt)
 
-    def _make_observations(self, tasks):
+    def _make_observations(self, tasks, human_input=False):
         """Prepare observation set according agent API
 
         Args:
@@ -100,11 +100,16 @@ class TesterKpi4(TesterBase):
         Implementation of base class TesterBase abstract method
         """
         observations = []
-        for task in tasks['paragraphs']:
-            for question in task['qas']:
-                observations.append({
-                    'id': question['id'],
-                    'text': '%s\n%s' % (task['context'], question['question'])})
+        if human_input:
+            observations.append({
+                'id': 'dummy',
+                'text': '%s\n%s' % (tasks[0], tasks[1])})
+        else:
+            for task in tasks['paragraphs']:
+                for question in task['qas']:
+                    observations.append({
+                        'id': question['id'],
+                        'text': '%s\n%s' % (task['context'], question['question'])})
         return observations
 
     def _batchfy_observations(self, observations, batch_length):
@@ -145,7 +150,7 @@ class TesterKpi4(TesterBase):
                 predictions.extend(predict)
         return predictions
 
-    def _make_answers(self, observations, predictions):
+    def _make_answers(self, observations, predictions, human_input=False):
         """Prepare answers dict for the JSON payload of the POST request
 
         Args:
@@ -164,4 +169,7 @@ class TesterKpi4(TesterBase):
             answers[obs['id']] = pred['text']
         tasks = copy.deepcopy(self.tasks)
         tasks['answers'] = answers
-        return tasks
+        if human_input:
+            return answers['dummy']
+        else:
+            return tasks

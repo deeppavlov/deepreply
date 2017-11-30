@@ -68,7 +68,7 @@ class TesterKpi2(TesterBase):
 
         self.agent = create_agent(opt)
 
-    def _make_observations(self, tasks):
+    def _make_observations(self, tasks, human_input=False):
         """Prepare observation set according agent API
 
         Args:
@@ -80,11 +80,17 @@ class TesterKpi2(TesterBase):
         Implementation of base class TesterBase abstract method
         """
         observations = []
-        for task in tasks['qas']:
+        if human_input:
             observations.append({
-                'id': task['id'],
-                'text': 'Dummy title\n%s\n%s' % (task['phrase1'], task['phrase2']),
+                'id': 'dummy',
+                'text': 'Dummy title\n%s\n%s' % (tasks[0], tasks[1]),
             })
+        else:
+            for task in tasks['qas']:
+                observations.append({
+                    'id': task['id'],
+                    'text': 'Dummy title\n%s\n%s' % (task['phrase1'], task['phrase2']),
+                })
         return observations
 
     def _get_predictions(self, observations):
@@ -101,7 +107,7 @@ class TesterKpi2(TesterBase):
         predictions = self.agent.batch_act(observations)
         return predictions
 
-    def _make_answers(self, observations, predictions):
+    def _make_answers(self, observations, predictions, human_input=False):
         """Prepare answers dict for the JSON payload of the POST request
 
         Args:
@@ -120,4 +126,7 @@ class TesterKpi2(TesterBase):
         observ_predict = list(zip(observations, predictions))
         for obs, pred in observ_predict:
             answers['answers'][obs['id']] = (lambda s: np.float64((1 if s == 0.5 else round(s))))(pred['score'][0])
-        return answers
+        if human_input:
+            return answers['answers']['dummy']
+        else:
+            return answers

@@ -73,7 +73,7 @@ class TesterKpi1(TesterBase):
 
         self.agent = create_agent(opt)
 
-    def _make_observations(self, tasks):
+    def _make_observations(self, tasks, human_input=False):
         """Prepare observation set according agent API
 
         Args:
@@ -85,11 +85,17 @@ class TesterKpi1(TesterBase):
         Implementation of base class TesterBase abstract method
         """
         observations = []
-        for task in tasks['qas']:
+        if human_input:
             observations.append({
-                'id': task['id'],
-                'text': task['question'],
+                'id': 'dummy',
+                'text': tasks[0],
             })
+        else:
+            for task in tasks['qas']:
+                observations.append({
+                    'id': task['id'],
+                    'text': task['question'],
+                })
         return observations
 
     def _get_predictions(self, observations):
@@ -106,7 +112,7 @@ class TesterKpi1(TesterBase):
         predictions = self.agent.batch_act(observations)
         return predictions
 
-    def _make_answers(self, observations, predictions):
+    def _make_answers(self, observations, predictions, human_input=False):
         """Prepare answers dict for the JSON payload of the POST request
 
         Args:
@@ -125,4 +131,7 @@ class TesterKpi1(TesterBase):
         observ_predict = list(zip(observations, predictions))
         for obs, pred in observ_predict:
             answers['answers'][obs['id']] = pred['score']
-        return answers
+        if human_input:
+            return answers['answers']['dummy']
+        else:
+            return answers

@@ -74,7 +74,7 @@ class TesterKpi11(TesterBase):
 
         self.agent = create_agent(opt)
 
-    def _make_observations(self, tasks):
+    def _make_observations(self, tasks, human_input=False):
         """Prepare observation set according agent API
 
         Args:
@@ -149,7 +149,7 @@ class TesterKpi11(TesterBase):
             predictions.append(prediction['valid_conll'][0])
         return predictions
 
-    def _make_answers(self, observations, predictions):
+    def _make_answers(self, observations, predictions, human_input=False):
         """Prepare answers dict for the JSON payload of the POST request
 
         Args:

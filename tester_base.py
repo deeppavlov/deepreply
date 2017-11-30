@@ -125,7 +125,7 @@ class TesterBase(ABC, Process):
         return tasks
 
     @abstractmethod
-    def _make_observations(self, tasks):
+    def _make_observations(self, tasks, human_input):
         """Prepare observation set according agent API
 
         Args:
@@ -151,7 +151,7 @@ class TesterBase(ABC, Process):
         """
 
     @abstractmethod
-    def _make_answers(self, observations, predictions):
+    def _make_answers(self, observations, predictions, human_input):
         """Prepare answers dict for the JSON payload of the POST request
 
         Args:
@@ -213,16 +213,33 @@ class TesterBase(ABC, Process):
         self.score = score_response['text']
         self.response_code = score_response['status_code']
 
+    def run_score(self, observation):
+        observations = self._make_observations(observation, human_input=True)
+        self.observations = observations
+
+        predictions = self._get_predictions(observations)
+        self.predictions = predictions
+
+        answers = self._make_answers(observations, predictions)
+        self.answers = answers
+
     def run(self):
         if self.agent is None:
             self.init_agent()
 
         while True:
-            tasks_numer = self.input_queue.get()
-            print("Run %s on %s tasks" % (self.kpi_name, tasks_numer))
-            self.set_numtasks(tasks_numer)
-            self.run_test(init_agent=False)
-            print("% score  %s" % (self.kpi_name, self.score))
+            task = self.input_queue.get()
+            print("Run %s on task: %s" % (self.kpi_name, str(task)))
+            self.run_score(task)
             result = copy.deepcopy(self.tasks)
-            result.update(copy.deepcopy(self.answers))
+            print("% action result:  %s" % (self.kpi_name, result))
             self.output_queue.put(result)
+            # tasks_numer = self.input_queue.get()
+            # print("Run %s on %s tasks" % (self.kpi_name, tasks_numer))
+            # self.set_numtasks(tasks_numer)
+            # self.run_test(init_agent=False)
+            # print("% score  %s" % (self.kpi_name, self.score))
+            # result = copy.deepcopy(self.tasks)
+            # result.update(copy.deepcopy(self.answers))
+            # self.output_queue.put(result)
+
