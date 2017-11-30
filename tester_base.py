@@ -214,10 +214,15 @@ class TesterBase(ABC, Process):
         self.response_code = score_response['status_code']
 
     def run(self):
+        if self.agent is None:
+            self.init_agent()
+
         while True:
             tasks_numer = self.input_queue.get()
             print("Run %s on %s tasks" % (self.kpi_name, tasks_numer))
             self.set_numtasks(tasks_numer)
             self.run_test(init_agent=False)
             print("% score  %s" % (self.kpi_name, self.score))
-            self.output_queue.put(self.score)
+            result = copy.deepcopy(self.tasks)
+            result.update(copy.deepcopy(self.answers))
+            self.output_queue.put(result)
