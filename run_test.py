@@ -196,10 +196,13 @@ def main(argv):
     # Execute test
     tester_module = __import__(config['kpis'][kpi_name]['settings_kpi']['tester_file'])
     tester_class = getattr(tester_module, 'Tester')
-    tester = tester_class(config, opt)
+    in_q = Queue()
+    out_q = Queue()
+    tester = tester_class(config, opt, in_q, out_q)
     tester.init_agent()
     iters = config['iterations_num']
     log_tester_state = config['log_tester_state']
+
     for _ in range(iters):
         print('Executing %s test...' % config['kpi_name'])
         start_time = str(datetime.now())
@@ -272,10 +275,6 @@ def init_all_models():
         :return: Dict with initiated Tester objects for all KPIs
         :rtype: dict
     """
-
-
-
-
     kpi_models = {}
     opt = {}
     opt['model_files_dir'] = None
