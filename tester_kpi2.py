@@ -42,7 +42,7 @@ class TesterKpi2(TesterBase):
             :type opt: multiprocessing.Queue
         All params a needed to init base class (TesterBase) instance
         """
-        super(Testerkpi2, self).__init__(config, opt, input_queue, output_queue)
+        super(TesterKpi2, self).__init__(config, opt, input_queue, output_queue)
 
     def init_agent(self):
         """Initiate model agent
