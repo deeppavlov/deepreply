@@ -17,7 +17,7 @@ def index():
 @app.route('/answer/kpi1', methods=['POST'])
 def answer_kpi1():
     """
-    Run model for specified KPI on specified tasks number
+    KPI 1: Insults
     ---
     parameters:
      - name: data
@@ -31,7 +31,7 @@ def answer_kpi1():
 @app.route('/answer/kpi2', methods=['POST'])
 def answer_kpi2():
     """
-    Run model for specified KPI on specified tasks number
+    KPI 2: Paraphraser
     ---
     parameters:
      - name: data
@@ -45,7 +45,7 @@ def answer_kpi2():
 @app.route('/answer/kpi3', methods=['POST'])
 def answer_kpi3():
     """
-    Run model for specified KPI on specified tasks number
+    KPI 3: NER
     ---
     parameters:
      - name: data
@@ -59,7 +59,7 @@ def answer_kpi3():
 @app.route('/answer/kpi4', methods=['POST'])
 def answer_kpi4():
     """
-    Run model for specified KPI on specified tasks number
+    KPI 4: SQUAD
     ---
     parameters:
      - name: data
