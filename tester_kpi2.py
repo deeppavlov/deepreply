@@ -125,7 +125,7 @@ class TesterKpi2(TesterBase):
         answers['answers'] = {}
         observ_predict = list(zip(observations, predictions))
         for obs, pred in observ_predict:
-            answers['answers'][obs['id']] = (lambda s: np.float64((1 if s == 0.5 else round(s))))(pred['score'][0])
+            answers['answers'][obs['id']] = np.float64(pred['score'][0])
         if human_input:
             return answers['answers']['dummy']
         else:
