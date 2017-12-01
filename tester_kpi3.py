@@ -129,9 +129,9 @@ class TesterKpi3(TesterBase):
         observ_predict = list(zip(observations, predictions))
         for obs, pred in observ_predict:
             answers[obs['id']] = pred['text']
-        tasks = copy.deepcopy(self.tasks)
-        tasks['answers'] = answers
         if human_input:
             return answers['dummy']
         else:
+            tasks = copy.deepcopy(self.tasks)
+            tasks['answers'] = answers
             return tasks
