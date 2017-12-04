@@ -242,4 +242,5 @@ class TesterBase(ABC, Process):
                 result = copy.deepcopy(self.tasks)
                 result.update(copy.deepcopy(self.answers))
                 self.output_queue.put(result)
-
+            else:
+                self.output_queue.put("%s parameter error: %s belongs to unknown type" % (self.kpi_name, str(input_q)))
