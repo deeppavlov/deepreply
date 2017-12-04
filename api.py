@@ -76,16 +76,27 @@ def answer(kpi_name):
             "error": "request must contains json data"
         }), 400
 
+    text0 = request.get_json().get('text0') or ""
     text1 = request.get_json().get('text1') or ""
     text2 = request.get_json().get('text2') or ""
 
-    if text1 == "":
-        return jsonify({
-            "error": "request must contains non empty 'text1' parameter"
-        }), 400
+    if text0 == "":
+        if text1 == "":
+            return jsonify({
+                "error": "request must contains non empty 'text0 or text1' parameter"
+            }), 400
+        else:
+            q_put = [text1, text2]
+    else:
+        if isinstance(text0, int):
+            q_put = text0
+        else:
+            return jsonify({
+                "error": "'text0' parameter must be integer number"
+            }), 400
 
     (model, in_q, out_q) = models[kpi_name]
-    in_q.put([text1, text2])
+    in_q.put(q_put)
     result = out_q.get()
 
     return jsonify(result), 200
@@ -93,4 +104,4 @@ def answer(kpi_name):
 
 if __name__ == "__main__":
     models = init_all_models()
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='127.0.0.1', port=5000, debug=False)
