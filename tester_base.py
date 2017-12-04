@@ -119,7 +119,7 @@ class TesterBase(ABC, Process):
             test_tasks_number = self.config['kpis'][self.kpi_name]['settings_kpi']['test_tasks_number']
         else:
             test_tasks_number = self.numtasks
-        get_params = {'stage': 'test', 'quantity': test_tasks_number}
+        get_params = {'stage': 'netest', 'quantity': test_tasks_number}
         get_response = requests.get(get_url, params=get_params)
         tasks = json.loads(get_response.text)
         return tasks
