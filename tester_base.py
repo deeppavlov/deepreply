@@ -216,31 +216,31 @@ class TesterBase(ABC, Process):
     def run_score(self, observation):
         observations = self._make_observations(observation, human_input=True)
         self.observations = observations
-        print(observation)
         predictions = self._get_predictions(observations)
         self.predictions = predictions
-        print(predictions)
         answers = self._make_answers(observations, predictions, human_input=True)
         self.answers = answers
-        print(answers)
 
     def run(self):
         if self.agent is None:
             self.init_agent()
 
         while True:
-            task = self.input_queue.get()
-            print("Run %s on task: %s" % (self.kpi_name, str(task)))
-            self.run_score(task)
-            result = copy.deepcopy(self.answers)
-            print("%s action result:  %s" % (self.kpi_name, result))
-            self.output_queue.put(result)
-            # tasks_numer = self.input_queue.get()
-            # print("Run %s on %s tasks" % (self.kpi_name, tasks_numer))
-            # self.set_numtasks(tasks_numer)
-            # self.run_test(init_agent=False)
-            # print("% score  %s" % (self.kpi_name, self.score))
-            # result = copy.deepcopy(self.tasks)
-            # result.update(copy.deepcopy(self.answers))
-            # self.output_queue.put(result)
-
+            input_q = self.input_queue.get()
+            print("Run %s, received input: %s" % (self.kpi_name, str(input_q)))
+            if isinstance(input_q, list):
+                print("%s human input mode..." % self.kpi_name)
+                self.run_score(input_q)
+                result = copy.deepcopy(self.answers)
+                print("%s action result:  %s" % (self.kpi_name, result))
+                self.output_queue.put(result)
+            elif isinstance(input_q, int):
+                print("%s API mode..." % self.kpi_name)
+                self.set_numtasks(input_q)
+                self.run_test(init_agent=False)
+                print("%s score: %s" % (self.kpi_name, self.score))
+                result = copy.deepcopy(self.tasks)
+                result.update(copy.deepcopy(self.answers))
+                self.output_queue.put(result)
+            else:
+                self.output_queue.put("%s parameter error: %s belongs to unknown type" % (self.kpi_name, str(input_q)))

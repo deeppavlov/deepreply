@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify, redirect
 from flasgger import Swagger
-
+from flask_cors import CORS
 from run_test import init_all_models
 
 app = Flask(__name__)
 Swagger(app)
+CORS(app)
 
 models = None
 
@@ -12,6 +13,41 @@ models = None
 @app.route('/')
 def index():
     return redirect('/apidocs/')
+
+
+@app.route('/score', methods=['GET'])
+def score():
+    """
+    Run model for specified KPI on specified tasks number
+    ---
+    parameters:
+      - name: kpi_name
+        in: query
+        required: true
+        type: string
+      - name: tasks_number
+        in: query
+        required: true
+        type: string
+    """
+    kpi_name = request.args.get('kpi_name')
+    if kpi_name not in ["kpi1", 'kpi2', "kpi3", "kpi4"]:
+        return jsonify({
+            'error': 'kpi_name must be one of: kpi1, kpi2, kpi3, kpi4'
+        }), 400
+
+    tasks_number = request.args.get('tasks_number')
+
+    if not tasks_number.isdigit() or int(tasks_number) <= 0:
+        return jsonify({
+            'error': 'tasks_number must be an integer, greater then zero'
+        }), 400
+
+    (model, in_q, out_q) = models[kpi_name]
+    in_q.put(int(tasks_number))
+    result = out_q.get()
+
+    return jsonify(result), 200
 
 
 @app.route('/answer/kpi1', methods=['POST'])
