@@ -57,7 +57,7 @@ def get_model_files(config):
             print('Done')
 
         # Download model files
-        print('Downloading model to ' + model_download_path + ' ...')
+        print('Downloading model to %s ...' % model_download_path)
         os.makedirs(os.path.dirname(model_extract_dir), exist_ok=True)
         if update_models_from_local:
             shutil.copy(model_repo_url, model_download_path)
@@ -69,7 +69,7 @@ def get_model_files(config):
         print('Done')
 
         # Extract model files
-        print('Extracting model to ' + model_extract_dir + ' ...')
+        print('Extracting model to %s ...' % model_extract_dir)
         tar = tarfile.open(model_download_path, 'r:gz')
         tar.extractall(path=model_extract_dir)
         tar.close()
@@ -296,7 +296,6 @@ def init_all_models():
 
     # Initialising sequence for the each KPI Tester object
     kpi_names = config['kpi_names']
-    # kpi_names = ["kpi11"]
 
     for kpi_name in kpi_names:
         config['kpi_name'] = kpi_name
