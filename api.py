@@ -1,10 +1,11 @@
 from flask import Flask, request, jsonify, redirect
 from flasgger import Swagger
-
+from flask_cors import CORS
 from run_test import init_all_models
 
 app = Flask(__name__)
 Swagger(app)
+CORS(app)
 
 models = None
 
@@ -12,6 +13,41 @@ models = None
 @app.route('/')
 def index():
     return redirect('/apidocs/')
+
+
+@app.route('/score', methods=['GET'])
+def score():
+    """
+    Run model for specified KPI on specified tasks number
+    ---
+    parameters:
+      - name: kpi_name
+        in: query
+        required: true
+        type: string
+      - name: tasks_number
+        in: query
+        required: true
+        type: string
+    """
+    kpi_name = request.args.get('kpi_name')
+    if kpi_name not in ["kpi1", 'kpi2', "kpi3", "kpi4"]:
+        return jsonify({
+            'error': 'kpi_name must be one of: kpi1, kpi2, kpi3, kpi4'
+        }), 400
+
+    tasks_number = request.args.get('tasks_number')
+
+    if not tasks_number.isdigit() or int(tasks_number) <= 0:
+        return jsonify({
+            'error': 'tasks_number must be an integer, greater then zero'
+        }), 400
+
+    (model, in_q, out_q) = models[kpi_name]
+    in_q.put(int(tasks_number))
+    result = out_q.get()
+
+    return jsonify(result), 200
 
 
 @app.route('/answer/kpi1', methods=['POST'])
@@ -76,27 +112,16 @@ def answer(kpi_name):
             "error": "request must contains json data"
         }), 400
 
-    text0 = request.get_json().get('text0') or ""
     text1 = request.get_json().get('text1') or ""
     text2 = request.get_json().get('text2') or ""
 
-    if text0 == "":
-        if text1 == "":
-            return jsonify({
-                "error": "request must contains non empty 'text0 or text1' parameter"
-            }), 400
-        else:
-            q_put = [text1, text2]
-    else:
-        if isinstance(text0, int):
-            q_put = text0
-        else:
-            return jsonify({
-                "error": "'text0' parameter must be integer number"
-            }), 400
+    if text1 == "":
+        return jsonify({
+            "error": "request must contains non empty 'text1' parameter"
+        }), 400
 
     (model, in_q, out_q) = models[kpi_name]
-    in_q.put(q_put)
+    in_q.put([text1, text2])
     result = out_q.get()
 
     return jsonify(result), 200
