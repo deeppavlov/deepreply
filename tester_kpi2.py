@@ -14,6 +14,7 @@
 
 
 import os
+import copy
 import numpy as np
 
 import build_utils as bu
@@ -121,14 +122,14 @@ class TesterKpi2(TesterBase):
         Implementation of base class TesterBase abstract method
         """
         answers = {}
-        answers['sessionId'] = self.session_id
-        answers['answers'] = {}
         observ_predict = list(zip(observations, predictions))
         if human_input:
             for obs, pred in observ_predict:
-                answers['answers'][obs['id']] = np.float64(pred['score'][0])
-            return answers['answers']['dummy']
+                answers[obs['id']] = np.float64(pred['score'][0])
+            return answers['dummy']
         else:
             for obs, pred in observ_predict:
-                answers['answers'][obs['id']] = (lambda s: np.float64((0 if s < 0.5 else 1)))(pred['score'][0])
-            return answers
+                answers[obs['id']] = (lambda s: np.float64((0 if s < 0.5 else 1)))(pred['score'][0])
+            tasks = copy.deepcopy(self.tasks)
+            tasks['answers'] = answers
+            return tasks

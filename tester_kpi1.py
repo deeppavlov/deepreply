@@ -14,6 +14,7 @@
 
 
 import os
+import copy
 
 import build_utils as bu
 from parlai.core.agents import create_agent
@@ -126,12 +127,12 @@ class TesterKpi1(TesterBase):
         Implementation of base class TesterBase abstract method
         """
         answers = {}
-        answers['sessionId'] = self.session_id
-        answers['answers'] = {}
         observ_predict = list(zip(observations, predictions))
         for obs, pred in observ_predict:
-            answers['answers'][obs['id']] = pred['score']
+            answers[obs['id']] = pred['score']
         if human_input:
-            return answers['answers']['dummy']
+            return answers['dummy']
         else:
-            return answers
+            tasks = copy.deepcopy(self.tasks)
+            tasks['answers'] = answers
+            return tasks
