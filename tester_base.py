@@ -16,6 +16,7 @@
 import json
 import requests
 import copy
+import traceback
 from abc import ABC, abstractmethod
 from multiprocessing import Process
 
@@ -226,21 +227,26 @@ class TesterBase(ABC, Process):
             self.init_agent()
 
         while True:
-            input_q = self.input_queue.get()
-            print("Run %s, received input: %s" % (self.kpi_name, str(input_q)))
-            if isinstance(input_q, list):
-                print("%s human input mode..." % self.kpi_name)
-                self.run_score(input_q)
-                result = copy.deepcopy(self.answers)
-                print("%s action result:  %s" % (self.kpi_name, result))
-                self.output_queue.put(result)
-            elif isinstance(input_q, int):
-                print("%s API mode..." % self.kpi_name)
-                self.set_numtasks(input_q)
-                self.run_test(init_agent=False)
-                print("%s score: %s" % (self.kpi_name, self.score))
-                result = copy.deepcopy(self.tasks)
-                result.update(copy.deepcopy(self.answers))
-                self.output_queue.put(result)
-            else:
-                self.output_queue.put("%s parameter error: %s belongs to unknown type" % (self.kpi_name, str(input_q)))
+            try:
+                input_q = self.input_queue.get()
+                print("Run %s, received input: %s" % (self.kpi_name, str(input_q)))
+                if isinstance(input_q, list):
+                    print("%s human input mode..." % self.kpi_name)
+                    self.run_score(input_q)
+                    result = copy.deepcopy(self.answers)
+                    print("%s action result:  %s" % (self.kpi_name, result))
+                    self.output_queue.put(result)
+                elif isinstance(input_q, int):
+                    print("%s API mode..." % self.kpi_name)
+                    self.set_numtasks(input_q)
+                    self.run_test(init_agent=False)
+                    print("%s score: %s" % (self.kpi_name, self.score))
+                    result = copy.deepcopy(self.tasks)
+                    result.update(copy.deepcopy(self.answers))
+                    self.output_queue.put(result)
+                else:
+                    self.output_queue.put({"ERROR":
+                                               "{} parameter error - {} belongs to unknown type".format(self.kpi_name,
+                                                                                                        str(input_q))})
+            except Exception as e:
+                self.output_queue.put({"ERROR": "{}".format(traceback.extract_stack())})

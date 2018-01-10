@@ -123,7 +123,8 @@ def answer(kpi_name):
     (model, in_q, out_q) = models[kpi_name]
     in_q.put([text1, text2])
     result = out_q.get()
-
+    if result.get("ERROR") is not None:
+        return jsonify(result), 400
     return jsonify(result), 200
 
 
