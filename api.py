@@ -46,6 +46,8 @@ def score():
     (model, in_q, out_q) = models[kpi_name]
     in_q.put(int(tasks_number))
     result = out_q.get()
+    if isinstance(result, dict) and result.get("ERROR"):
+        return jsonify(result), 400
 
     return jsonify(result), 200
 
