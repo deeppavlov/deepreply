@@ -45,6 +45,8 @@ def get_model_files(config):
     update_models_from_local = config['update_models_from_local']
     kpi_models_dir = os.path.join(config['models_dir'], kpi_name)
     model_repo_url = config['kpis'][kpi_name]['settings_kpi']['model_repo_url']
+    if model_repo_url == '':
+        return None
     model_filename = os.path.basename(urllib.parse.urlsplit(model_repo_url).path)
     model_download_path = os.path.join(kpi_models_dir, model_filename)
     model_extract_dir = model_download_path[:model_download_path.rfind(".tar.gz")] + '/'
@@ -97,6 +99,8 @@ def get_modelfiles_paths(model_dir, model_files):
         :rtype: string
     Function executes recursive search in all model_dir subdirs
     """
+    if model_dir is None:
+        return None
     # Get list of model dir path and all recursive subdirs
     model_dirs_recursive = [model_dir]
     dirs_recursive = os.walk(model_dir)
