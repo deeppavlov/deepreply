@@ -83,7 +83,7 @@ class TesterKpi3(TesterBase):
             observations.append({
                 'id': 'dummy',
                 # Preprocess task
-                'text': tasks[0].split('\t')[0]
+                'text': tasks[0].replace('\n', ' ') #.split('\t')[0]
             })
         else:
             for task in tasks['qas']:
