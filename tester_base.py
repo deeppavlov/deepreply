@@ -248,5 +248,5 @@ class TesterBase(ABC, Process):
                     self.output_queue.put({"ERROR":
                                                "{} parameter error - {} belongs to unknown type".format(self.kpi_name,
                                                                                                         str(input_q))})
-            except Exception as e:
+            except Exception as e:  
                 self.output_queue.put({"ERROR": "{}".format(traceback.extract_stack())})
