@@ -1,22 +1,25 @@
-from flask import Flask, request, jsonify, redirect
-from flasgger import Swagger
-from flask_cors import CORS
+from sanic import Sanic, request
+from sanic.response import json, redirect
+from sanic_openapi import swagger_blueprint, openapi_blueprint
+from sanic_cors import CORS
 from run_test import init_all_models
 
-app = Flask(__name__)
-Swagger(app)
+
+app = Sanic()
+app.blueprint(openapi_blueprint)
+app.blueprint(swagger_blueprint)
 CORS(app)
 
 models = None
 
 
 @app.route('/')
-def index():
+async def index():
     return redirect('/apidocs/')
 
 
 @app.route('/score', methods=['GET'])
-def score():
+async def score():
     """
     Run model for specified KPI on specified tasks number
     ---
@@ -32,14 +35,14 @@ def score():
     """
     kpi_name = request.args.get('kpi_name')
     if kpi_name not in ["kpi1", 'kpi2', "kpi3", "kpi4", "kpi4ru", "kpi3_2"]:
-        return jsonify({
+        return json({
             'error': 'kpi_name must be one of: kpi1, kpi2, kpi3, kpi4, "kpi4ru", "kpi3_2"'
         }), 400
 
     tasks_number = request.args.get('tasks_number')
 
     if not tasks_number.isdigit() or int(tasks_number) <= 0:
-        return jsonify({
+        return json({
             'error': 'tasks_number must be an integer, greater then zero'
         }), 400
 
@@ -47,13 +50,13 @@ def score():
     in_q.put(int(tasks_number))
     result = out_q.get()
     if isinstance(result, dict) and result.get("ERROR"):
-        return jsonify(result), 400
+        return json(result), 400
 
-    return jsonify(result), 200
+    return json(result), 200
 
 
 @app.route('/answer/kpi1', methods=['POST'])
-def answer_kpi1():
+async def answer_kpi1():
     """
     KPI 1: Insults
     ---
@@ -67,7 +70,7 @@ def answer_kpi1():
 
 
 @app.route('/answer/kpi2', methods=['POST'])
-def answer_kpi2():
+async def answer_kpi2():
     """
     KPI 2: Paraphraser
     ---
@@ -81,7 +84,7 @@ def answer_kpi2():
 
 
 @app.route('/answer/kpi3', methods=['POST'])
-def answer_kpi3():
+async def answer_kpi3():
     """
     KPI 3: NER
     ---
@@ -95,7 +98,7 @@ def answer_kpi3():
 
 
 @app.route('/answer/kpi3_2', methods=['POST'])
-def answer_kpi3_2():
+async def answer_kpi3_2():
     """
     KPI 3: NER (By Le Ahn)
     ---
@@ -109,7 +112,7 @@ def answer_kpi3_2():
 
 
 @app.route('/answer/kpi4', methods=['POST'])
-def answer_kpi4():
+async def answer_kpi4():
     """
     KPI 4: SQUAD
     ---
@@ -123,7 +126,7 @@ def answer_kpi4():
 
 
 @app.route('/answer/kpi4ru', methods=['POST'])
-def answer_kpi4ru():
+async def answer_kpi4ru():
     """
     KPI 4: SQUAD (Russian)
     ---
@@ -136,9 +139,9 @@ def answer_kpi4ru():
     return answer("kpi4ru")
 
 
-def answer(kpi_name):
+async def answer(kpi_name):
     if not request.is_json:
-        return jsonify({
+        return json({
             "error": "request must contains json data"
         }), 400
 
@@ -146,16 +149,16 @@ def answer(kpi_name):
     text2 = request.get_json().get('text2') or ""
 
     if text1 == "":
-        return jsonify({
+        return json({
             "error": "request must contains non empty 'text1' parameter"
         }), 400
 
-    (model, in_q, out_q) = models[kpi_name]
+    (model, in_q, out_q) = await models[kpi_name]
     in_q.put([text1, text2])
     result = out_q.get()
     if isinstance(result, dict) and result.get("ERROR"):
-        return jsonify(result), 400
-    return jsonify(result), 200
+        return json(result), 400
+    return json(result), 200
 
 
 if __name__ == "__main__":
