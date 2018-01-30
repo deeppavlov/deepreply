@@ -160,4 +160,4 @@ def answer(kpi_name):
 
 if __name__ == "__main__":
     models = init_all_models()
-    app.run(host='0.0.0.0', port=6001, debug=False)
+    app.run(host='0.0.0.0', port=6001, threaded=True)
