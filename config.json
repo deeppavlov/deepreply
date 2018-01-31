@@ -105,8 +105,8 @@
 					"tester_file":"tester_router",
 					"tester_class":"TesterRouter",
 					"model_repo_url":"",
-					"rest_url_get":"http://10.11.1.85:6003/score",
-					"rest_url_post":"http://10.11.1.85:6003/answer",
+					"rest_url_get":"http://10.11.1.2:6005/score",
+					"rest_url_post":"http://10.11.1.2:6005/answer",
 					"test_tasks_number":10
 				},
 			"settings_agent":
