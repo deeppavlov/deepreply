@@ -31,9 +31,9 @@ def score():
         type: string
     """
     kpi_name = request.args.get('kpi_name')
-    if kpi_name not in ["kpi1", 'kpi2', "kpi3", "kpi4", "kpi4ru", "kpi3_2"]:
+    if kpi_name not in ["kpi1", 'kpi2', "kpi3", "kpi4", "kpi4ru", "kpi3_2", "kpi3en"]:
         return jsonify({
-            'error': 'kpi_name must be one of: kpi1, kpi2, kpi3, kpi4, "kpi4ru", "kpi3_2"'
+            'error': 'kpi_name must be one of: kpi1, kpi2, kpi3, kpi4, "kpi4ru", "kpi3_2", "kpi3en"'
         }), 400
 
     tasks_number = request.args.get('tasks_number')
@@ -106,6 +106,20 @@ def answer_kpi3_2():
        type: json
     """
     return answer("kpi3_2")
+
+
+@app.route('/answer/kpi3en', methods=['POST'])
+def answer_kpi3en():
+    """
+    KPI 3: NER (English)
+    ---
+    parameters:
+     - name: data
+       in: body
+       required: true
+       type: json
+    """
+    return answer("kpi3en")
 
 
 @app.route('/answer/kpi4', methods=['POST'])
