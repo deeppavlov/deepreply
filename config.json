@@ -4,8 +4,8 @@
 	"embeddings_dir":"../data/",
 	"test_logs_dir":"./test_logs/",
 	"kpi_name":"kpi1",
-	"kpi_names":["kpi1", "kpi2", "kpi3", "kpi4", "kpi4ru", "kpi3_2", "kpi3en", "kpiIntentEn"],
-	"kpi_names_all":["kpi1", "kpi2", "kpi3", "kpi4", "kpi4ru", "kpi3_2", "kpi3en", "kpiIntentEn"],
+	"kpi_names":["kpi1", "kpi2", "kpi3", "kpi4", "kpi4ru", "kpi3_2", "kpi3en", "intents"],
+	"kpi_names_all":["kpi1", "kpi2", "kpi3", "kpi4", "kpi4ru", "kpi3_2", "kpi3en", "intents"],
 	"iterations_num":1,
 	"update_models_from_local":1,
 	"update_models":1,
@@ -150,7 +150,7 @@
 					"embedding_file":"ft_0.8.3_nltk_yalen_sg_300.bin"
 				}
 		},
-		"kpiIntentEn":
+		"intents":
 		{
 			"settings_kpi":
 				{
