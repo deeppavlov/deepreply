@@ -31,9 +31,11 @@ def score():
         type: string
     """
     kpi_name = request.args.get('kpi_name')
-    if kpi_name not in ["kpi1", 'kpi2', "kpi3", "kpi4", "kpi4ru", "kpi3_2", "kpi3en"]:
+    if kpi_name not in ["kpi1", 'kpi2', "kpi3", "kpi4", "kpi4ru",
+                        "kpi3_2", "kpi3en", "kpiIntentEn"]:
         return jsonify({
-            'error': 'kpi_name must be one of: kpi1, kpi2, kpi3, kpi4, "kpi4ru", "kpi3_2", "kpi3en"'
+            'error': 'kpi_name must be one of: kpi1, kpi2, kpi3, kpi4, '
+                     'kpi4ru, kpi3_2, kpi3en, kpiIntentEn'
         }), 400
 
     tasks_number = request.args.get('tasks_number')
@@ -148,6 +150,20 @@ def answer_kpi4ru():
        type: json
     """
     return answer("kpi4ru")
+
+
+@app.route('/answer/kpiIntentEn', methods=['POST'])
+def answer_kpiIntentEn():
+    """
+    KPI: Intent Recogintion
+    ---
+    parameters:
+     - name: data
+       in: body
+       required: true
+       type: json
+    """
+    return answer("kpiIntentEn")
 
 
 def answer(kpi_name):
