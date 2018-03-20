@@ -4,8 +4,8 @@
 	"embeddings_dir":"../data/",
 	"test_logs_dir":"./test_logs/",
 	"kpi_name":"kpi1",
-	"kpi_names":["kpi1", "kpi2", "kpi3", "kpi4", "kpi4ru", "kpi3_2", "kpi3en", "intents"],
-	"kpi_names_all":["kpi1", "kpi2", "kpi3", "kpi4", "kpi4ru", "kpi3_2", "kpi3en", "intents"],
+	"kpi_names":["kpi1", "kpi2", "kpi3", "kpi4", "kpi4ru", "kpi3_2", "kpi3en", "intents", "kpi4en", "ranking_en"],
+	"kpi_names_all":["kpi1", "kpi2", "kpi3", "kpi4", "kpi4ru", "kpi3_2", "kpi3en", "intents", "kpi4en", "ranking_en"],
 	"iterations_num":1,
 	"update_models_from_local":1,
 	"update_models":1,
@@ -116,6 +116,24 @@
 					"dict_files_names":"squad1.dict"
 				}
 		},
+		"kpi4en":
+		{
+			"settings_kpi":
+				{
+					"tester_file":"tester_router",
+					"tester_class":"TesterRouter",
+					"model_repo_url":"",
+					"rest_url_get":"http://10.11.1.2:6008/score",
+					"rest_url_post":"http://10.11.1.2:6008/answer",
+					"test_tasks_number":10
+				},
+			"settings_agent":
+				{
+					"model_files_names":[],
+					"embedding_file":"",
+					"dict_files_names":""
+				}
+		},
 		"kpi4ru":
 		{
 			"settings_kpi":
@@ -159,6 +177,24 @@
 					"model_repo_url":"",
 					"rest_url_get":"http://10.11.1.2:6007/score",
 					"rest_url_post":"http://10.11.1.2:6007/answer",
+					"test_tasks_number":10
+				},
+			"settings_agent":
+				{
+					"model_files_names":[],
+					"embedding_file":"",
+					"dict_files_names":""
+				}
+		},
+		"ranking_en":
+		{
+			"settings_kpi":
+				{
+					"tester_file":"tester_router",
+					"tester_class":"TesterRouter",
+					"model_repo_url":"",
+					"rest_url_get":"http://10.11.1.2:6009/score",
+					"rest_url_post":"http://10.11.1.2:6009/answer",
 					"test_tasks_number":10
 				},
 			"settings_agent":
