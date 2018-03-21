@@ -5,6 +5,16 @@
   "test_logs_dir": "./test_logs/",
   "kpi_name": "kpi1",
   "kpi_names": [
+    "kpi1",
+    "kpi2",
+    "kpi3",
+    "kpi4",
+    "kpi4ru",
+    "kpi3_2",
+    "kpi3en",
+    "intents",
+    "kpi4en",
+    "ranking_en",
     "ner_en_ontonotes"
   ],
   "kpi_names_all": [

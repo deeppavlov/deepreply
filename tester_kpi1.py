@@ -19,6 +19,7 @@ import copy
 import build_utils as bu
 from parlai.core.agents import create_agent
 from tester_base import TesterBase
+from deeppavlov.tasks.insults.build import data_preprocessing
 
 
 class TesterKpi1(TesterBase):
@@ -89,15 +90,21 @@ class TesterKpi1(TesterBase):
         if human_input:
             observations.append({
                 'id': 'dummy',
-                'text': tasks[0],
+                'text': self._preprocess_input(tasks[0]),
             })
         else:
             for task in tasks['qas']:
                 observations.append({
                     'id': task['id'],
-                    'text': task['question'],
+                    'text': self._preprocess_input(task['question']),
                 })
         return observations
+
+    def _preprocess_input(self, input):
+        input_list = [input]
+        preprocessed_list = data_preprocessing(input_list)
+        preprocessed_input = preprocessed_list[0]
+        return preprocessed_input
 
     def _get_predictions(self, observations):
         """Process observations with agent's model and get predictions on them
