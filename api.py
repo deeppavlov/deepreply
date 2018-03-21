@@ -3,6 +3,10 @@ from flasgger import Swagger
 from flask_cors import CORS
 from run_test import init_all_models
 
+
+TWO_ARGUMENTS_MODELS = ['kpi2', 'kpi4', 'kpi4ru', 'kpi4en']
+
+
 app = Flask(__name__)
 Swagger(app)
 CORS(app)
@@ -32,10 +36,10 @@ def score():
     """
     kpi_name = request.args.get('kpi_name')
     if kpi_name not in ["kpi1", 'kpi2', "kpi3", "kpi4", "kpi4ru",
-                        "kpi3_2", "kpi3en", "intents", "kpi4en", "ranking_en"]:
+                        "kpi3_2", "kpi3en", "intents", "kpi4en", "ranking_en", "ner_en_ontonotes"]:
         return jsonify({
             'error': 'kpi_name must be one of: kpi1, kpi2, kpi3, kpi4, '
-                     'kpi4ru, kpi3_2, kpi3en, intents, kpi4en, ranking_en'
+                     'kpi4ru, kpi3_2, kpi3en, intents, kpi4en, ranking_en, "ner_en_ontonotes"'
         }), 400
 
     tasks_number = request.args.get('tasks_number')
@@ -194,6 +198,20 @@ def answer_ranking_en():
     return answer("ranking_en")
 
 
+@app.route('/answer/ner_en_ontonotes', methods=['POST'])
+def answer_ner_en_ontonotes():
+    """
+    KPI: NER ontonotes (English)
+    ---
+    parameters:
+     - name: data
+       in: body
+       required: true
+       type: json
+    """
+    return answer("ner_en_ontonotes")
+
+
 def answer(kpi_name):
     if not request.is_json:
         return jsonify({
@@ -203,9 +221,14 @@ def answer(kpi_name):
     text1 = request.get_json().get('text1') or ""
     text2 = request.get_json().get('text2') or ""
 
-    if text1 == "":
+    if text1.strip() == "":
         return jsonify({
-            "error": "request must contains non empty 'text1' parameter"
+            "error": "request must contain non empty 'text1' parameter"
+        }), 400
+
+    if kpi_name in TWO_ARGUMENTS_MODELS and text2.strip() == "":
+        return jsonify({
+            "error": "request must contain non empty 'text2' parameter"
         }), 400
 
     (model, in_q, out_q) = models[kpi_name]
