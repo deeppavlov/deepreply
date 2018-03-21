@@ -1,208 +1,223 @@
 {
-	"data_dir":"./build/",
-	"models_dir":"./build/models/",
-	"embeddings_dir":"../data/",
-	"test_logs_dir":"./test_logs/",
-	"kpi_name":"kpi1",
-	"kpi_names":["kpi1", "kpi2", "kpi3", "kpi4", "kpi4ru", "kpi3_2", "kpi3en", "intents", "kpi4en", "ranking_en"],
-	"kpi_names_all":["kpi1", "kpi2", "kpi3", "kpi4", "kpi4ru", "kpi3_2", "kpi3en", "intents", "kpi4en", "ranking_en"],
-	"iterations_num":1,
-	"update_models_from_local":1,
-	"update_models":1,
-	"log_tester_state":0,
-	"kpis":
-	{
-		"kpi1":
-		{
-			"settings_kpi":
-				{
-					"tester_file":"tester_kpi1",
-					"tester_class":"TesterKpi1",
-					"model_repo_url":"../data/insults.tar.gz",
-					"rest_url":"http://api.aibotbench.com/kpi1/qas",
-					"test_tasks_number":789
-				},
-			"settings_agent":
-				{
-					"model_files_names":["cnn_word_0", "cnn_word_1", "cnn_word_2"],
-					"model_names":["cnn_word", "cnn_word", "cnn_word"],
-					"embedding_file":"reddit_fasttext_model.bin"
-				}
-		},
-		"kpi2":
-		{
-			"settings_kpi":
-				{
-					"tester_file":"tester_kpi2",
-					"tester_class":"TesterKpi2",
-					"model_repo_url":"../data/paraphraser.tar.gz",
-					"rest_url":"http://api.aibotbench.com/kpi2/qas",
-					"test_tasks_number":1923
-				},
-			"settings_agent":
-				{
-					"model_files_names":["paraphraser_0", "paraphraser_1", "paraphraser_2", "paraphraser_3", "paraphraser_4"],
-					"embedding_file":"ft_0.8.3_nltk_yalen_sg_300.bin"
-				}
-		},
-		"kpi3":
-		{
-			"settings_kpi":
-				{
-					"tester_file":"tester_kpi3",
-					"tester_class":"TesterKpi3",
-					"model_repo_url":"../data/ner.tar.gz",
-					"rest_url":"http://api.aibotbench.com/kpi3/qas",
-					"test_tasks_number":9
-				},
-			"settings_agent":
-				{
-					"model_files_names":["model.ckpt"],
-					"dict_files_names":"dict"
-				},
-			"settings_agent_comment":"dict_files_names param should always point to .dict file"
-		},
-		"kpi3_2":
-		{
-			"settings_kpi":
-				{
-					"tester_file":"tester_router",
-					"tester_class":"TesterRouter",
-					"model_repo_url":"",
-					"rest_url_get":"http://10.11.1.85:6004/score",
-					"rest_url_post":"http://10.11.1.85:6004/answer",
-					"test_tasks_number":10
-				},
-			"settings_agent":
-				{
-					"model_files_names":[],
-					"embedding_file":"",
-					"dict_files_names":""
-				}
-		},
-		"kpi3en":
-		{
-			"settings_kpi":
-				{
-					"tester_file":"tester_router",
-					"tester_class":"TesterRouter",
-					"model_repo_url":"",
-					"rest_url_get":"http://10.11.1.85:6006/score",
-					"rest_url_post":"http://10.11.1.85:6006/answer",
-					"test_tasks_number":10
-				},
-			"settings_agent":
-				{
-					"model_files_names":[],
-					"embedding_file":"",
-					"dict_files_names":""
-				}
-		},
-		"kpi4":
-		{
-			"settings_kpi":
-				{
-					"tester_file":"tester_kpi4",
-					"tester_class":"TesterKpi4",
-					"model_repo_url":"../data/squad.tar.gz",
-					"rest_url":"http://api.aibotbench.com/kpi4/qas",
-					"test_tasks_number":1889,
-					"observations_batchsize":500
-				},
-			"settings_agent":
-				{
-					"model_files_names":["squad1"],
-					"embedding_file":"glove.840B.300d.txt",
-					"dict_files_names":"squad1.dict"
-				}
-		},
-		"kpi4en":
-		{
-			"settings_kpi":
-				{
-					"tester_file":"tester_router",
-					"tester_class":"TesterRouter",
-					"model_repo_url":"",
-					"rest_url_get":"http://10.11.1.2:6008/score",
-					"rest_url_post":"http://10.11.1.2:6008/answer",
-					"test_tasks_number":10
-				},
-			"settings_agent":
-				{
-					"model_files_names":[],
-					"embedding_file":"",
-					"dict_files_names":""
-				}
-		},
-		"kpi4ru":
-		{
-			"settings_kpi":
-				{
-					"tester_file":"tester_router",
-					"tester_class":"TesterRouter",
-					"model_repo_url":"",
-					"rest_url_get":"http://10.11.1.2:6005/score",
-					"rest_url_post":"http://10.11.1.2:6005/answer",
-					"test_tasks_number":10
-				},
-			"settings_agent":
-				{
-					"model_files_names":[],
-					"embedding_file":"",
-					"dict_files_names":""
-				}
-		},
-		"kpi11":
-		{
-			"settings_kpi":
-				{
-					"tester_file":"tester_kpi11",
-					"tester_class":"TesterKpi11",
-					"model_repo_url":"../data/coreference.tar.gz",
-					"rest_url":"http://api.aibotbench.com/kpi11/qas",
-					"test_tasks_number":18
-				},
-			"settings_agent":
-				{
-					"model_files_names":["model.index"],
-					"embedding_file":"ft_0.8.3_nltk_yalen_sg_300.bin"
-				}
-		},
-		"intents":
-		{
-			"settings_kpi":
-				{
-					"tester_file":"tester_router",
-					"tester_class":"TesterRouter",
-					"model_repo_url":"",
-					"rest_url_get":"http://10.11.1.2:6007/score",
-					"rest_url_post":"http://10.11.1.2:6007/answer",
-					"test_tasks_number":10
-				},
-			"settings_agent":
-				{
-					"model_files_names":[],
-					"embedding_file":"",
-					"dict_files_names":""
-				}
-		},
-		"ranking_en":
-		{
-			"settings_kpi":
-				{
-					"tester_file":"tester_router",
-					"tester_class":"TesterRouter",
-					"model_repo_url":"",
-					"rest_url_get":"http://10.11.1.2:6009/score",
-					"rest_url_post":"http://10.11.1.2:6009/answer",
-					"test_tasks_number":10
-				},
-			"settings_agent":
-				{
-					"model_files_names":[],
-					"embedding_file":"",
-					"dict_files_names":""
-				}
-		}
-	}
+  "data_dir": "./build/",
+  "models_dir": "./build/models/",
+  "embeddings_dir": "../data/",
+  "test_logs_dir": "./test_logs/",
+  "kpi_name": "kpi1",
+  "kpi_names": [
+    "ner_en_ontonotes"
+  ],
+  "kpi_names_all": [
+    "kpi1",
+    "kpi2",
+    "kpi3",
+    "kpi4",
+    "kpi4ru",
+    "kpi3_2",
+    "kpi3en",
+    "intents",
+    "kpi4en",
+    "ranking_en",
+    "ner_en_ontonotes"
+  ],
+  "iterations_num": 1,
+  "update_models_from_local": 1,
+  "update_models": 1,
+  "log_tester_state": 0,
+  "kpis": {
+    "kpi1": {
+      "settings_kpi": {
+        "tester_file": "tester_kpi1",
+        "tester_class": "TesterKpi1",
+        "model_repo_url": "../data/insults.tar.gz",
+        "rest_url": "http://api.aibotbench.com/kpi1/qas",
+        "test_tasks_number": 789
+      },
+      "settings_agent": {
+        "model_files_names": [
+          "cnn_word_0",
+          "cnn_word_1",
+          "cnn_word_2"
+        ],
+        "model_names": [
+          "cnn_word",
+          "cnn_word",
+          "cnn_word"
+        ],
+        "embedding_file": "reddit_fasttext_model.bin"
+      }
+    },
+    "kpi2": {
+      "settings_kpi": {
+        "tester_file": "tester_kpi2",
+        "tester_class": "TesterKpi2",
+        "model_repo_url": "../data/paraphraser.tar.gz",
+        "rest_url": "http://api.aibotbench.com/kpi2/qas",
+        "test_tasks_number": 1923
+      },
+      "settings_agent": {
+        "model_files_names": [
+          "paraphraser_0",
+          "paraphraser_1",
+          "paraphraser_2",
+          "paraphraser_3",
+          "paraphraser_4"
+        ],
+        "embedding_file": "ft_0.8.3_nltk_yalen_sg_300.bin"
+      }
+    },
+    "kpi3": {
+      "settings_kpi": {
+        "tester_file": "tester_kpi3",
+        "tester_class": "TesterKpi3",
+        "model_repo_url": "../data/ner.tar.gz",
+        "rest_url": "http://api.aibotbench.com/kpi3/qas",
+        "test_tasks_number": 9
+      },
+      "settings_agent": {
+        "model_files_names": [
+          "model.ckpt"
+        ],
+        "dict_files_names": "dict"
+      },
+      "settings_agent_comment": "dict_files_names param should always point to .dict file"
+    },
+    "kpi3_2": {
+      "settings_kpi": {
+        "tester_file": "tester_router",
+        "tester_class": "TesterRouter",
+        "model_repo_url": "",
+        "rest_url_get": "http://10.11.1.85:6004/score",
+        "rest_url_post": "http://10.11.1.85:6004/answer",
+        "test_tasks_number": 10
+      },
+      "settings_agent": {
+        "model_files_names": [],
+        "embedding_file": "",
+        "dict_files_names": ""
+      }
+    },
+    "kpi3en": {
+      "settings_kpi": {
+        "tester_file": "tester_router",
+        "tester_class": "TesterRouter",
+        "model_repo_url": "",
+        "rest_url_get": "http://10.11.1.85:6006/score",
+        "rest_url_post": "http://10.11.1.85:6006/answer",
+        "test_tasks_number": 10
+      },
+      "settings_agent": {
+        "model_files_names": [],
+        "embedding_file": "",
+        "dict_files_names": ""
+      }
+    },
+    "kpi4": {
+      "settings_kpi": {
+        "tester_file": "tester_kpi4",
+        "tester_class": "TesterKpi4",
+        "model_repo_url": "../data/squad.tar.gz",
+        "rest_url": "http://api.aibotbench.com/kpi4/qas",
+        "test_tasks_number": 1889,
+        "observations_batchsize": 500
+      },
+      "settings_agent": {
+        "model_files_names": [
+          "squad1"
+        ],
+        "embedding_file": "glove.840B.300d.txt",
+        "dict_files_names": "squad1.dict"
+      }
+    },
+    "kpi4en": {
+      "settings_kpi": {
+        "tester_file": "tester_router",
+        "tester_class": "TesterRouter",
+        "model_repo_url": "",
+        "rest_url_get": "http://10.11.1.2:6008/score",
+        "rest_url_post": "http://10.11.1.2:6008/answer",
+        "test_tasks_number": 10
+      },
+      "settings_agent": {
+        "model_files_names": [],
+        "embedding_file": "",
+        "dict_files_names": ""
+      }
+    },
+    "kpi4ru": {
+      "settings_kpi": {
+        "tester_file": "tester_router",
+        "tester_class": "TesterRouter",
+        "model_repo_url": "",
+        "rest_url_get": "http://10.11.1.2:6005/score",
+        "rest_url_post": "http://10.11.1.2:6005/answer",
+        "test_tasks_number": 10
+      },
+      "settings_agent": {
+        "model_files_names": [],
+        "embedding_file": "",
+        "dict_files_names": ""
+      }
+    },
+    "kpi11": {
+      "settings_kpi": {
+        "tester_file": "tester_kpi11",
+        "tester_class": "TesterKpi11",
+        "model_repo_url": "../data/coreference.tar.gz",
+        "rest_url": "http://api.aibotbench.com/kpi11/qas",
+        "test_tasks_number": 18
+      },
+      "settings_agent": {
+        "model_files_names": [
+          "model.index"
+        ],
+        "embedding_file": "ft_0.8.3_nltk_yalen_sg_300.bin"
+      }
+    },
+    "intents": {
+      "settings_kpi": {
+        "tester_file": "tester_router",
+        "tester_class": "TesterRouter",
+        "model_repo_url": "",
+        "rest_url_get": "http://10.11.1.2:6007/score",
+        "rest_url_post": "http://10.11.1.2:6007/answer",
+        "test_tasks_number": 10
+      },
+      "settings_agent": {
+        "model_files_names": [],
+        "embedding_file": "",
+        "dict_files_names": ""
+      }
+    },
+    "ranking_en": {
+      "settings_kpi": {
+        "tester_file": "tester_router",
+        "tester_class": "TesterRouter",
+        "model_repo_url": "",
+        "rest_url_get": "http://10.11.1.2:6009/score",
+        "rest_url_post": "http://10.11.1.2:6009/answer",
+        "test_tasks_number": 10
+      },
+      "settings_agent": {
+        "model_files_names": [],
+        "embedding_file": "",
+        "dict_files_names": ""
+      }
+    },
+    "ner_en_ontonotes": {
+      "settings_kpi": {
+        "tester_file": "tester_router",
+        "tester_class": "TesterRouter",
+        "model_repo_url": "",
+        "rest_url_get": "http://10.11.1.2:6010/score",
+        "rest_url_post": "http://10.11.1.2:6010/answer",
+        "test_tasks_number": 10
+      },
+      "settings_agent": {
+        "model_files_names": [],
+        "embedding_file": "",
+        "dict_files_names": ""
+      }
+    }
+  }
 }
