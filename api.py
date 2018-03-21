@@ -3,6 +3,10 @@ from flasgger import Swagger
 from flask_cors import CORS
 from run_test import init_all_models
 
+
+TWO_ARGUMENTS_MODELS = ['kpi2', 'kpi4', 'kpi4ru', 'kpi4en']
+
+
 app = Flask(__name__)
 Swagger(app)
 CORS(app)
@@ -217,9 +221,14 @@ def answer(kpi_name):
     text1 = request.get_json().get('text1') or ""
     text2 = request.get_json().get('text2') or ""
 
-    if text1 == "":
+    if text1.strip() == "":
         return jsonify({
-            "error": "request must contains non empty 'text1' parameter"
+            "error": "request must contain non empty 'text1' parameter"
+        }), 400
+
+    if kpi_name in TWO_ARGUMENTS_MODELS and text2.strip() == "":
+        return jsonify({
+            "error": "request must contain non empty 'text2' parameter"
         }), 400
 
     (model, in_q, out_q) = models[kpi_name]
