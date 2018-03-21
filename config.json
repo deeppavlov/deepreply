@@ -97,8 +97,8 @@
         "tester_file": "tester_router",
         "tester_class": "TesterRouter",
         "model_repo_url": "",
-        "rest_url_get": "http://10.11.1.85:6004/score",
-        "rest_url_post": "http://10.11.1.85:6004/answer",
+        "rest_url_get": "http://10.11.1.2:6004/score",
+        "rest_url_post": "http://10.11.1.2:6004/answer",
         "test_tasks_number": 10
       },
       "settings_agent": {
@@ -112,8 +112,8 @@
         "tester_file": "tester_router",
         "tester_class": "TesterRouter",
         "model_repo_url": "",
-        "rest_url_get": "http://10.11.1.85:6006/score",
-        "rest_url_post": "http://10.11.1.85:6006/answer",
+        "rest_url_get": "http://10.11.1.2:6011/score",
+        "rest_url_post": "http://10.11.1.2:6011/answer",
         "test_tasks_number": 10
       },
       "settings_agent": {
