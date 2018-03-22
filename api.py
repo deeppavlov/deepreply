@@ -213,7 +213,7 @@ def answer_ner_en_ontonotes():
 
 
 @app.route('/answer/odqa_en', methods=['POST'])
-def answer_ner_en_ontonotes():
+def odqa_en():
     """
     KPI: ODQA (English)
     ---
