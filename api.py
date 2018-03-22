@@ -36,10 +36,10 @@ def score():
     """
     kpi_name = request.args.get('kpi_name')
     if kpi_name not in ["kpi1", 'kpi2', "kpi3", "kpi4", "kpi4ru",
-                        "kpi3_2", "kpi3en", "intents", "kpi4en", "ranking_en", "ner_en_ontonotes"]:
+                        "kpi3_2", "kpi3en", "intents", "kpi4en", "ranking_en", "ner_en_ontonotes", "odqa_en"]:
         return jsonify({
             'error': 'kpi_name must be one of: kpi1, kpi2, kpi3, kpi4, '
-                     'kpi4ru, kpi3_2, kpi3en, intents, kpi4en, ranking_en, "ner_en_ontonotes"'
+                     'kpi4ru, kpi3_2, kpi3en, intents, kpi4en, ranking_en, "ner_en_ontonotes", "odqa_en"'
         }), 400
 
     tasks_number = request.args.get('tasks_number')
@@ -210,6 +210,20 @@ def answer_ner_en_ontonotes():
        type: json
     """
     return answer("ner_en_ontonotes")
+
+
+@app.route('/answer/odqa_en', methods=['POST'])
+def answer_ner_en_ontonotes():
+    """
+    KPI: ODQA (English)
+    ---
+    parameters:
+     - name: data
+       in: body
+       required: true
+       type: json
+    """
+    return answer("odqa_en")
 
 
 def answer(kpi_name):
