@@ -37,11 +37,11 @@ def score():
     kpi_name = request.args.get('kpi_name')
     if kpi_name not in ["kpi1", 'kpi2', "kpi3", "kpi4", "kpi4ru",
                         "kpi3_2", "kpi3en", "intents", "kpi4en",
-                        "ranking_en", "ner_en_ontonotes", "odqa_en", "proxy"]:
+                        "ranking_en", "ner_en_ontonotes", "odqa_en"]:
         return jsonify({
             'error': 'kpi_name must be one of: kpi1, kpi2, kpi3, kpi4, '
                      'kpi4ru, kpi3_2, kpi3en, intents, kpi4en,'
-                     'ranking_en, "ner_en_ontonotes", "odqa_en", "proxy"'
+                     'ranking_en, "ner_en_ontonotes", "odqa_en"'
         }), 400
 
     tasks_number = request.args.get('tasks_number')
