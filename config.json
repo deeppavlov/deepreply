@@ -16,7 +16,8 @@
     "kpi4en",
     "ranking_en",
     "ner_en_ontonotes",
-    "odqa_en"
+    "odqa_en",
+    "proxy"
   ],
   "kpi_names_all": [
     "kpi1",
@@ -30,7 +31,8 @@
     "kpi4en",
     "ranking_en",
     "ner_en_ontonotes",
-    "odqa_en"
+    "odqa_en",
+    "proxy"
   ],
   "iterations_num": 1,
   "update_models_from_local": 1,
@@ -238,6 +240,21 @@
         "model_repo_url": "",
         "rest_url_get": "http://10.11.1.2:6012/score",
         "rest_url_post": "http://10.11.1.2:6012/answer",
+        "test_tasks_number": 10
+      },
+      "settings_agent": {
+        "model_files_names": [],
+        "embedding_file": "",
+        "dict_files_names": ""
+      }
+    },
+     "proxy": {
+      "settings_kpi": {
+        "tester_file": "tester_router",
+        "tester_class": "TesterRouter",
+        "model_repo_url": "",
+        "rest_url_get": "http://10.11.1.2:6013/score",
+        "rest_url_post": "http://10.11.1.2:6013/proxy",
         "test_tasks_number": 10
       },
       "settings_agent": {
