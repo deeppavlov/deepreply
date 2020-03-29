@@ -6,6 +6,7 @@ every python library required to run and/or train the model
 - all user scripts are located in the top-level directory, there is no need for an end-user to open
 any nested directories to run or train the model
 - there is a `README.md` file containing the following:
+  - model description
   - installation instructions
   - download links for data and/or pre-trained model files if any are available
   - external files structure and training data format
