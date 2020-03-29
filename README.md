@@ -8,6 +8,6 @@ any nested directories to run or train the model
 - there is a `README.md` file containing the following:
   - installation instructions
   - download links for data and/or pre-trained model files if any are available
-  - external files structure description for cases when the data is not available
+  - external files structure and training data format
   - usage examples
 - python code is documented using [Google Style dosctrings](http://google.github.io/styleguide/pyguide.html#381-docstrings)
