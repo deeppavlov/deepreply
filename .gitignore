@@ -1,12 +1,3 @@
-*.pickle
-build/
-build_tmp/
 .idea/
 __pycache__/
-test/
-maintenance.py
-debug/
-test_logs/
-coref_kernels.so
-config_with_kpi11_02.json
-tester_kpi11_2.py
+venv/
